@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Максим Ап](https://up.htmlacademy.ru/javascript/17/user/854503).
-* Наставник: `Неизвестно`.
+* Наставник: [Сергей Ufocoder](https://htmlacademy.ru/profile/id573445).
 
 ---
 

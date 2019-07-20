@@ -19,9 +19,7 @@ var Y_MAX_LIMIT = 630
 // 2 function
 
 var generateRandomHouseType = function() {
-  var n = generateRandomNumber(0, HOUSE_TYPES.length - 1);
-  // @TODO: from HOUSE_TYPES, can use generateRandomNumber
-  return HOUSE_TYPES[n];
+  return HOUSE_TYPES[generateRandomNumber(0, HOUSE_TYPES.length - 1)];
 }
 
 var generateAvatar = function(index) {
@@ -29,8 +27,7 @@ var generateAvatar = function(index) {
 }
 
 var generateRandomNumber = function(from, to) {
-  var rand = Math.round(from - 0.5 + Math.random() * (to - from + 1));
-  return rand; // @TODO
+  return Math.round(from - 0.5 + Math.random() * (to - from + 1));
 }
 
 var generatePin = function(index) {
@@ -58,32 +55,32 @@ var generatePins = function(limit) {
 
 
 
-var renderPin = function(a) {
+var renderPin = function(mockElem) {
   var newPin = mapPin.cloneNode(true);
-  newPin.querySelector('.map__pin-author').src = mocks[i].author.avatar;
-  newPin.querySelector('.map__pin-author').alt = mocks[i].offer.type;
-  newPin.style.left = mocks[i].location.x + 'px'
-  newPin.style.top = mocks[i].location.y + 'px';
-
+  newPin.querySelector('.map__pin-author').src = mockElem.author.avatar;
+  newPin.querySelector('.map__pin-author').alt = mockElem.offer.type;
+  newPin.style.left = mockElem.location.x + 'px'
+  newPin.style.top = mockElem.location.y + 'px';
   return newPin;
+}
+
+var renderPins = function() {
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < PINS_LIMIT; i++) {
+    fragment.appendChild(renderPin(mocks[i]));
+  }
+  mapPins.appendChild(fragment);
 }
 
 // 3 main code
 
 var mapElement = document.querySelector('.map');
 var mapPins = mapElement.querySelector('.map__pins');
-// add element .map__pin
 var mapPin = document.querySelector('#pin').content.querySelector('.map__pin');
+var mocks = generatePins(PINS_LIMIT);
 
 mapElement.classList.remove('map--faded');
 
-var mocks = generatePins(PINS_LIMIT);
+renderPins();
 
 
-var fragment = document.createDocumentFragment();
-for (var i = 0; i < PINS_LIMIT; i++) {
-
-  fragment.appendChild(renderPin(mocks[i]));
-}
-
-mapPins.appendChild(fragment);

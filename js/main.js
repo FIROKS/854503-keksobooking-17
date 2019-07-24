@@ -16,11 +16,6 @@ var Y_MIN_LIMIT = 130;
 var Y_MAX_LIMIT = 630;
 var Y_OFFSET = 40;
 
-var MAIN_PIN_WIDTH = 65;
-var MAIN_PIN_HEIGHT = 65;
-var HALF_MAIN_PIN_WIDTH = 32.5;
-var HALF_MAIN_PIN_HEIGHT = 32.5;
-
 var generateRandomHouseType = function () {
   return HOUSE_TYPES[generateRandomNumber(0, HOUSE_TYPES.length - 1)];
 };
@@ -68,16 +63,6 @@ var createPinElement = function (pin) {
   return pinElement;
 };
 
-var renderPins = function (pins) {
-  var fragment = document.createDocumentFragment();
-
-  for (var i = 0; i < pins.length - 1; i++) {
-    fragment.appendChild(createPinElement(pins[i]));
-  }
-
-  mapPinsElements.appendChild(fragment);
-};
-
 var disableElement = function (element) {
   element.setAttribute('disabled', '');
 };
@@ -86,17 +71,29 @@ var activateElement = function (element) {
   element.removeAttribute('disabled');
 };
 
+var renderPins = function (pins) {
+  var fragment = document.createDocumentFragment();
+
+  pins.forEach(function (pin) {
+    fragment.appendChild(createPinElement(pin));
+  });
+
+  mapPinsElements.appendChild(fragment);
+};
+
+var destroyPins = function () {
+  mapPinsElements
+    .querySelectorAll('.map__pin:not(.map__pin--main)')
+    .forEach(function (element) {
+      element.remove(); // mapPinsElements.removeChild(element) ?
+    });
+};
+
 var activateForm = function () {
   mapElement.classList.remove('map--faded');
   mainFormElement.classList.remove('ad-form--disabled');
-
   mainFormFieldsetElements.forEach(activateElement);
   mapFormFieldsetElements.forEach(activateElement);
-  renderPins(pins);
-
-  mapMainPinElement.removeEventListener('click', function () {
-    activateForm();
-  });
 };
 
 var deactivateForm = function () {
@@ -105,28 +102,23 @@ var deactivateForm = function () {
   mapFormFieldsetElements.forEach(disableElement);
 };
 
-var getСoordinates = function () {
-  var pinCoordinates = mapMainPinElement.getClientRects();
-  var mapCoordinates = mapElement.getClientRects();
-  return (pinCoordinates[0].left - mapCoordinates[0].left) + ',' + (pinCoordinates[0].top - mapCoordinates[0].top);
+var setDefaultFieldAdress = function () {
+  var mainPinCoordinates = mapMainPinElement.getBoundingClientRect();
+  var mapCoordinates = mapElement.getBoundingClientRect();
+  var x = mainPinCoordinates.x - mapCoordinates.x;
+  var y = mainPinCoordinates.y - mapCoordinates.y;
+
+  fieldAddressElement.value = x + ',' + y;
 };
 
-var fillAdress = function () {
-  fieldAddressElement.value = getСoordinates();
+var onMapMainPinElementClick = function () {
+  activateForm();
+  renderPins(pins);
+
+  mapMainPinElement.removeEventListener('click', onMapMainPinElementClick);
 };
-
-// var dsf = function () {
-//   switch (fieldHouseTypeElement.value) {
-//     case 'bungalo' : console.log('sdfasdf');
-
-//     default: console.log('default');
-//   }
-// };
-
-
 
 var mapElement = document.querySelector('.map');
-
 var mapMainPinElement = mapElement.querySelector('.map__pin--main');
 var mapPinsElements = mapElement.querySelector('.map__pins');
 var mapPinTemplateElement = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -137,17 +129,13 @@ var mapFilters = mapFormElement.querySelectorAll('.map__filter');
 
 var mainFormElement = document.querySelector('.ad-form');
 var mainFormFieldsetElements = mainFormElement.querySelectorAll('fieldset');
-
-var fieldHouseTypeElement = mainFormElement.querySelector('#type');
-var fieldPriceElement = mainFormElement.querySelector('#price');
 var fieldAddressElement = mainFormElement.querySelector('#address');
 
 var pins = generatePins(PINS_LIMIT);
 
-
+destroyPins();
 deactivateForm();
-fillAdress();
-//dsf();
-mapMainPinElement.addEventListener('click', function () {
-  activateForm();
-});
+setDefaultFieldAdress();
+
+mapMainPinElement.addEventListener('click', onMapMainPinElementClick);
+

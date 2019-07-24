@@ -78,38 +78,20 @@ var renderPins = function (pins) {
   mapPinsElements.appendChild(fragment);
 };
 
-var disableFieldset = function (mapFromFieldsetElements, mainFormFieldsetElements, mapFilters) {
-  for (var i = 0; i < mapFromFieldsetElements.length; i++) {
-    mapFromFieldsetElements[i].setAttribute('disabled', '');
-  }
-
-  for (i = 0; i < mainFormFieldsetElements.length; i++) {
-    mainFormFieldsetElements[i].setAttribute('disabled', '');
-  }
-
-  for (i = 0; i < mapFilters.length; i++) {
-    mapFilters[i].setAttribute('disabled', '');
-  }
+var desableElement = function (element) {
+  element.setAttribute('disabled', '');
 };
 
-var activateInputs = function (mapFromFieldsetElements, mainFormFieldsetElements, mapFilters) {
-  for (var i = 0; i < mapFromFieldsetElements.length; i++) {
-    mapFromFieldsetElements[i].removeAttribute('disabled');
-  }
-
-  for (i = 0; i < mainFormFieldsetElements.length; i++) {
-    mainFormFieldsetElements[i].removeAttribute('disabled');
-  }
-
-  for (i = 0; i < mapFilters.length; i++) {
-    mapFilters[i].removeAttribute('disabled');
-  }
+var activateElement = function (element) {
+  element.removeAttribute('disabled');
 };
 
 var activateSearch = function () {
   mapElement.classList.remove('map--faded');
   mainFormElement.classList.remove('ad-form--disabled');
-  activateInputs(mapFromFieldsetElements, mainFormFieldsetElements, mapFilters);
+
+  mainFormFieldsetElements.forEach(activateElement);
+  mapFormFieldsetElements.forEach(activateElement);
   renderPins(pins);
 
   mapMainPinElement.removeEventListener('click', function () {
@@ -125,7 +107,15 @@ var getСoordinates = function () {
 
 var fillAdress = function () {
   addressInputElement.value = getСoordinates();
-}
+};
+
+// var dsf = function () {
+//   switch (houseTypeElement.value) {
+//     case 'bungalo' : console.log('sdfasdf');
+
+//     default: console.log('default');
+//   }
+// };
 
 
 
@@ -136,22 +126,24 @@ var mapPinsElements = mapElement.querySelector('.map__pins');
 var mapPinTemplateElement = document.querySelector('#pin').content.querySelector('.map__pin');
 
 var mapFormElement = mapElement.querySelector('.map__filters');
-var mapFromFieldsetElements = mapFormElement.querySelectorAll('fieldset');
+var mapFormFieldsetElements = mapFormElement.querySelectorAll('fieldset');
 var mapFilters = mapFormElement.querySelectorAll('.map__filter');
 
 var mainFormElement = document.querySelector('.ad-form');
 var mainFormFieldsetElements = mainFormElement.querySelectorAll('fieldset');
 
+var houseTypeElement = mainFormElement.querySelector('#type');
+var priceElement = mainFormElement.querySelector('#price');
 var addressInputElement = mainFormElement.querySelector('#address');
 
 var pins = generatePins(PINS_LIMIT);
 
 
 
-disableFieldset(mapFromFieldsetElements, mainFormFieldsetElements, mapFilters);
-
+mainFormFieldsetElements.forEach(desableElement);
+mapFormFieldsetElements.forEach(desableElement);
 fillAdress();
-
+//dsf();
 mapMainPinElement.addEventListener('click', function () {
   activateSearch();
 });

@@ -63,21 +63,79 @@ var createPinElement = function (pin) {
   return pinElement;
 };
 
+var disableElement = function (element) {
+  element.setAttribute('disabled', '');
+};
+
+var activateElement = function (element) {
+  element.removeAttribute('disabled');
+};
+
 var renderPins = function (pins) {
   var fragment = document.createDocumentFragment();
 
-  for (var i = 0; i < pins.length - 1; i++) {
-    fragment.appendChild(createPinElement(pins[i]));
-  }
+  pins.forEach(function (pin) {
+    fragment.appendChild(createPinElement(pin));
+  });
 
   mapPinsElements.appendChild(fragment);
 };
 
+var destroyPins = function () {
+  mapPinsElements
+    .querySelectorAll('.map__pin:not(.map__pin--main)')
+    .forEach(function (element) {
+      element.remove(); // mapPinsElements.removeChild(element) ?
+    });
+};
+
+var activateForm = function () {
+  mapElement.classList.remove('map--faded');
+  mainFormElement.classList.remove('ad-form--disabled');
+  mainFormFieldsetElements.forEach(activateElement);
+  mapFormFieldsetElements.forEach(activateElement);
+};
+
+var deactivateForm = function () {
+  mapFilters.forEach(disableElement);
+  mainFormFieldsetElements.forEach(disableElement);
+  mapFormFieldsetElements.forEach(disableElement);
+};
+
+var setDefaultFieldAdress = function () {
+  var mainPinCoordinates = mapMainPinElement.getBoundingClientRect();
+  var mapCoordinates = mapElement.getBoundingClientRect();
+  var x = mainPinCoordinates.x - mapCoordinates.x;
+  var y = mainPinCoordinates.y - mapCoordinates.y;
+
+  fieldAddressElement.value = x + ',' + y;
+};
+
+var onMapMainPinElementClick = function () {
+  activateForm();
+  renderPins(pins);
+
+  mapMainPinElement.removeEventListener('click', onMapMainPinElementClick);
+};
+
 var mapElement = document.querySelector('.map');
+var mapMainPinElement = mapElement.querySelector('.map__pin--main');
 var mapPinsElements = mapElement.querySelector('.map__pins');
 var mapPinTemplateElement = document.querySelector('#pin').content.querySelector('.map__pin');
+
+var mapFormElement = mapElement.querySelector('.map__filters');
+var mapFormFieldsetElements = mapFormElement.querySelectorAll('fieldset');
+var mapFilters = mapFormElement.querySelectorAll('.map__filter');
+
+var mainFormElement = document.querySelector('.ad-form');
+var mainFormFieldsetElements = mainFormElement.querySelectorAll('fieldset');
+var fieldAddressElement = mainFormElement.querySelector('#address');
+
 var pins = generatePins(PINS_LIMIT);
 
-mapElement.classList.remove('map--faded');
+destroyPins();
+deactivateForm();
+setDefaultFieldAdress();
 
-renderPins(pins);
+mapMainPinElement.addEventListener('click', onMapMainPinElementClick);
+

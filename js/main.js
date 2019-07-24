@@ -73,11 +73,59 @@ var renderPins = function (pins) {
   mapPinsElements.appendChild(fragment);
 };
 
+var disableFieldset = function (mapFromFieldsetElements, mainFormFieldsetElements, mapFilters) {
+  for (var i = 0; i < mapFromFieldsetElements.length; i++) {
+    mapFromFieldsetElements[i].setAttribute('disabled', '');
+  }
+
+  for (i = 0; i < mainFormFieldsetElements.length; i++) {
+    mainFormFieldsetElements[i].setAttribute('disabled', '');
+  }
+
+  for (i = 0; i < mapFilters.length; i++) {
+    mapFilters[i].setAttribute('disabled', '');
+  }
+};
+
+var activateInputs = function (mapFromFieldsetElements, mainFormFieldsetElements, mapFilters) {
+  for (var i = 0; i < mapFromFieldsetElements.length; i++) {
+    mapFromFieldsetElements[i].removeAttribute('disabled');
+  }
+
+  for (i = 0; i < mainFormFieldsetElements.length; i++) {
+    mainFormFieldsetElements[i].removeAttribute('disabled');
+  }
+
+  for (i = 0; i < mapFilters.length; i++) {
+    mapFilters[i].removeAttribute('disabled');
+  }
+};
+
+var activateSearch = function () {
+  mapElement.classList.remove('map--faded');
+  mainFormElement.classList.remove('.ad-form--disabled');
+  activateInputs(mapFromFieldsetElements, mainFormFieldsetElements, mapFilters);
+};
+
 var mapElement = document.querySelector('.map');
+
+var mapMainPinElement = mapElement.querySelector('.map__pin--main');
 var mapPinsElements = mapElement.querySelector('.map__pins');
 var mapPinTemplateElement = document.querySelector('#pin').content.querySelector('.map__pin');
+
+var mapFormElement = mapElement.querySelector('.map__filters');
+var mapFromFieldsetElements = mapFormElement.querySelectorAll('fieldset');
+var mapFilters = mapFormElement.querySelectorAll('.map__filter');
+
+var mainFormElement = document.querySelector('.ad-form');
+var mainFormFieldsetElements = mainFormElement.querySelectorAll('fieldset');
+
 var pins = generatePins(PINS_LIMIT);
 
-mapElement.classList.remove('map--faded');
 
-renderPins(pins);
+//renderPins(pins);
+disableFieldset(mapFromFieldsetElements, mainFormFieldsetElements, mapFilters);
+
+mapMainPinElement.addEventListener('click', function () {
+  activateSearch();
+});

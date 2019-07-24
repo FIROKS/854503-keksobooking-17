@@ -78,7 +78,7 @@ var renderPins = function (pins) {
   mapPinsElements.appendChild(fragment);
 };
 
-var desableElement = function (element) {
+var disableElement = function (element) {
   element.setAttribute('disabled', '');
 };
 
@@ -86,7 +86,7 @@ var activateElement = function (element) {
   element.removeAttribute('disabled');
 };
 
-var activateSearch = function () {
+var activateForm = function () {
   mapElement.classList.remove('map--faded');
   mainFormElement.classList.remove('ad-form--disabled');
 
@@ -95,8 +95,14 @@ var activateSearch = function () {
   renderPins(pins);
 
   mapMainPinElement.removeEventListener('click', function () {
-    activateSearch();
+    activateForm();
   });
+};
+
+var deactivateForm = function () {
+  mapFilters.forEach(disableElement);
+  mainFormFieldsetElements.forEach(disableElement);
+  mapFormFieldsetElements.forEach(disableElement);
 };
 
 var getСoordinates = function () {
@@ -106,11 +112,11 @@ var getСoordinates = function () {
 };
 
 var fillAdress = function () {
-  addressInputElement.value = getСoordinates();
+  fieldAddressElement.value = getСoordinates();
 };
 
 // var dsf = function () {
-//   switch (houseTypeElement.value) {
+//   switch (fieldHouseTypeElement.value) {
 //     case 'bungalo' : console.log('sdfasdf');
 
 //     default: console.log('default');
@@ -132,18 +138,16 @@ var mapFilters = mapFormElement.querySelectorAll('.map__filter');
 var mainFormElement = document.querySelector('.ad-form');
 var mainFormFieldsetElements = mainFormElement.querySelectorAll('fieldset');
 
-var houseTypeElement = mainFormElement.querySelector('#type');
-var priceElement = mainFormElement.querySelector('#price');
-var addressInputElement = mainFormElement.querySelector('#address');
+var fieldHouseTypeElement = mainFormElement.querySelector('#type');
+var fieldPriceElement = mainFormElement.querySelector('#price');
+var fieldAddressElement = mainFormElement.querySelector('#address');
 
 var pins = generatePins(PINS_LIMIT);
 
 
-
-mainFormFieldsetElements.forEach(desableElement);
-mapFormFieldsetElements.forEach(desableElement);
+deactivateForm();
 fillAdress();
 //dsf();
 mapMainPinElement.addEventListener('click', function () {
-  activateSearch();
+  activateForm();
 });

@@ -16,6 +16,11 @@ var Y_MIN_LIMIT = 130;
 var Y_MAX_LIMIT = 630;
 var Y_OFFSET = 40;
 
+var MAIN_PIN_WIDTH = 65;
+var MAIN_PIN_HEIGHT = 65;
+var HALF_MAIN_PIN_WIDTH = 32.5;
+var HALF_MAIN_PIN_HEIGHT = 32.5;
+
 var generateRandomHouseType = function () {
   return HOUSE_TYPES[generateRandomNumber(0, HOUSE_TYPES.length - 1)];
 };
@@ -103,9 +108,26 @@ var activateInputs = function (mapFromFieldsetElements, mainFormFieldsetElements
 
 var activateSearch = function () {
   mapElement.classList.remove('map--faded');
-  mainFormElement.classList.remove('.ad-form--disabled');
+  mainFormElement.classList.remove('ad-form--disabled');
   activateInputs(mapFromFieldsetElements, mainFormFieldsetElements, mapFilters);
+  renderPins(pins);
+
+  mapMainPinElement.removeEventListener('click', function () {
+    activateSearch();
+  });
 };
+
+var getСoordinates = function () {
+  var pinCoordinates = mapMainPinElement.getClientRects();
+  var mapCoordinates = mapElement.getClientRects();
+  return (pinCoordinates[0].left - mapCoordinates[0].left) + ',' + (pinCoordinates[0].top - mapCoordinates[0].top);
+};
+
+var fillAdress = function () {
+  addressInputElement.value = getСoordinates();
+}
+
+
 
 var mapElement = document.querySelector('.map');
 
@@ -120,11 +142,15 @@ var mapFilters = mapFormElement.querySelectorAll('.map__filter');
 var mainFormElement = document.querySelector('.ad-form');
 var mainFormFieldsetElements = mainFormElement.querySelectorAll('fieldset');
 
+var addressInputElement = mainFormElement.querySelector('#address');
+
 var pins = generatePins(PINS_LIMIT);
 
 
-//renderPins(pins);
+
 disableFieldset(mapFromFieldsetElements, mainFormFieldsetElements, mapFilters);
+
+fillAdress();
 
 mapMainPinElement.addEventListener('click', function () {
   activateSearch();

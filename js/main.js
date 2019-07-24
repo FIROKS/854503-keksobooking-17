@@ -16,6 +16,13 @@ var Y_MIN_LIMIT = 130;
 var Y_MAX_LIMIT = 630;
 var Y_OFFSET = 40;
 
+var TypeToPriceMap = {
+  palace: 10000,
+  house: 5000,
+  flat: 1000,
+  bungalo: 0
+};
+
 var generateRandomHouseType = function () {
   return HOUSE_TYPES[generateRandomNumber(0, HOUSE_TYPES.length - 1)];
 };
@@ -85,21 +92,40 @@ var destroyPins = function () {
   mapPinsElements
     .querySelectorAll('.map__pin:not(.map__pin--main)')
     .forEach(function (element) {
-      element.remove(); // mapPinsElements.removeChild(element) ?
+      element.remove();
     });
+};
+
+var activateFilters = function () {
+  filterFormElements.forEach(activateElement);
+  filterFieldsetElements.forEach(activateElement);
 };
 
 var activateForm = function () {
   mapElement.classList.remove('map--faded');
-  mainFormElement.classList.remove('ad-form--disabled');
-  mainFormFieldsetElements.forEach(activateElement);
-  mapFormFieldsetElements.forEach(activateElement);
+  formElement.classList.remove('ad-form--disabled');
+
+  formFieldsetElements.forEach(activateElement);
+
+  fieldTypeElement.addEventListener('change', onFieldTypeElementChange);
+  fieldTimeInElement.addEventListener('change', onFieldTimeInElementChange);
+  fieldTimeOutElement.addEventListener('change', onFieldTimeOutElementChange);
+};
+
+var deactivateFilters = function () {
+  filterFormElements.forEach(disableElement);
+  filterFieldsetElements.forEach(disableElement);
 };
 
 var deactivateForm = function () {
-  mapFilters.forEach(disableElement);
-  mainFormFieldsetElements.forEach(disableElement);
-  mapFormFieldsetElements.forEach(disableElement);
+  mapElement.classList.add('map--faded');
+  formElement.classList.add('ad-form--disabled');
+
+  formFieldsetElements.forEach(disableElement);
+
+  fieldTypeElement.removeEventListener('change', onFieldTypeElementChange);
+  fieldTimeInElement.removeEventListener('change', onFieldTimeInElementChange);
+  fieldTimeOutElement.removeEventListener('change', onFieldTimeOutElementChange);
 };
 
 var setDefaultFieldAdress = function () {
@@ -113,29 +139,50 @@ var setDefaultFieldAdress = function () {
 
 var onMapMainPinElementClick = function () {
   activateForm();
+  activateFilters();
   renderPins(pins);
 
   mapMainPinElement.removeEventListener('click', onMapMainPinElementClick);
 };
 
+var onFieldTypeElementChange = function () {
+  var price = TypeToPriceMap[fieldTypeElement.value];
+
+  fieldPriceElement.min = price;
+  fieldPriceElement.placeholder = price;
+};
+
+var onFieldTimeInElementChange = function () {
+  fieldTimeOutElement.selectedIndex = fieldTimeInElement.selectedIndex;
+};
+
+var onFieldTimeOutElementChange = function () {
+  fieldTimeInElement.selectedIndex = fieldTimeOutElement.selectedIndex;
+};
+
 var mapElement = document.querySelector('.map');
+
+var filtersElement = mapElement.querySelector('.map__filters');
+var filterFormElements = filtersElement.querySelectorAll('.map__filter');
+var filterFieldsetElements = filtersElement.querySelectorAll('fieldset');
+
 var mapMainPinElement = mapElement.querySelector('.map__pin--main');
 var mapPinsElements = mapElement.querySelector('.map__pins');
 var mapPinTemplateElement = document.querySelector('#pin').content.querySelector('.map__pin');
 
-var mapFormElement = mapElement.querySelector('.map__filters');
-var mapFormFieldsetElements = mapFormElement.querySelectorAll('fieldset');
-var mapFilters = mapFormElement.querySelectorAll('.map__filter');
-
-var mainFormElement = document.querySelector('.ad-form');
-var mainFormFieldsetElements = mainFormElement.querySelectorAll('fieldset');
-var fieldAddressElement = mainFormElement.querySelector('#address');
+var formElement = document.querySelector('.ad-form');
+var formFieldsetElements = formElement.querySelectorAll('fieldset');
+var fieldAddressElement = formElement.querySelector('#address');
+var fieldPriceElement = formElement.querySelector('#price');
+var fieldTypeElement = formElement.querySelector('#type');
+var fieldTimeInElement = formElement.querySelector('#timein');
+var fieldTimeOutElement = formElement.querySelector('#timeout');
 
 var pins = generatePins(PINS_LIMIT);
 
 destroyPins();
 deactivateForm();
+deactivateFilters();
 setDefaultFieldAdress();
 
 mapMainPinElement.addEventListener('click', onMapMainPinElementClick);
-

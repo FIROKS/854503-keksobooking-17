@@ -11,9 +11,7 @@
   };
 
   var activateForm = function () {
-
     formElement.classList.remove('ad-form--disabled');
-
     formFieldsetElements.forEach(activateElement);
 
     fieldTypeElement.addEventListener('change', onFieldTypeElementChange);
@@ -22,9 +20,7 @@
   };
 
   var deactivateForm = function () {
-
     formElement.classList.add('ad-form--disabled');
-
     formFieldsetElements.forEach(disableElement);
 
     fieldTypeElement.removeEventListener('change', onFieldTypeElementChange);
@@ -54,15 +50,6 @@
   var onFieldTimeOutElementChange = function () {
     fieldTimeInElement.selectedIndex = fieldTimeOutElement.selectedIndex;
   };
-
-  // var setDefaultFieldAdress = function () {
-  //   var mainPinCoordinates = mapMainPinElement.getBoundingClientRect();
-  //   var mapCoordinates = mapElement.getBoundingClientRect();
-  //   var x = mainPinCoordinates.x - mapCoordinates.x;
-  //   var y = mainPinCoordinates.y - mapCoordinates.y;
-
-  //   fieldAddressElement.value = x + ',' + y;
-  // };
 
   var formElement = document.querySelector('.ad-form');
   var formFieldsetElements = formElement.querySelectorAll('fieldset');

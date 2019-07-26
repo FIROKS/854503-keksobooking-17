@@ -16,11 +16,11 @@ window.mainPin.setMoveCallback(function (x, y) {
   window.form.setFieldAdress(x, y);
 });
 
-/*
+
 window.form.setSubmitCallback(function () {
   console.log('form is sumbit');
-})
-*/
+});
+
 
 window.map.deactivate();
 window.form.deactivate();

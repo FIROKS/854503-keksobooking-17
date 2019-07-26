@@ -51,6 +51,16 @@
     fieldTimeInElement.selectedIndex = fieldTimeOutElement.selectedIndex;
   };
 
+  var onFormElementSubmit = function () {
+
+    if (typeof submitCallback === 'function') {
+      submitCallback();
+    }
+    formElement.removeEventListener('submit', onFormElementSubmit);
+  };
+
+  var submitCallback;
+
   var formElement = document.querySelector('.ad-form');
   var formFieldsetElements = formElement.querySelectorAll('fieldset');
   var fieldAddressElement = formElement.querySelector('#address');
@@ -59,12 +69,17 @@
   var fieldTimeInElement = formElement.querySelector('#timein');
   var fieldTimeOutElement = formElement.querySelector('#timeout');
 
+  formElement.addEventListener('submit', onFormElementSubmit);
+
   window.form = {
     activate: activateForm,
     deactivate: deactivateForm,
     setFieldAdress: function (x, y) {
       fieldAddressElement.value = x + ',' + y;
     },
+    setSubmitCallback: function (callback) {
+      submitCallback = callback;
+    }
   };
 
 })();

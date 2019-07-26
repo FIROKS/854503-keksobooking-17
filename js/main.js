@@ -8,12 +8,12 @@ var HOUSE_TYPES = [
   'bungalo'
 ];
 
-var X_MIN_LIMIT = 0;
-var X_MAX_LIMIT = 1200;
-var X_OFFSET = 20;
+var X_LIMIT_MIN = 0;
+var X_LIMIT_MAX = 1200;
+var Y_LIMIT_MIN = 130;
+var Y_LIMIT_MAX = 630;
 
-var Y_MIN_LIMIT = 130;
-var Y_MAX_LIMIT = 630;
+var X_OFFSET = 20;
 var Y_OFFSET = 40;
 
 var TypeToPriceMap = {
@@ -35,6 +35,8 @@ var generateRandomNumber = function (from, to) {
   return Math.round(from - 0.5 + Math.random() * (to - from + 1));
 };
 
+generateRandomNumber();
+
 var generatePin = function (index) {
   return {
     author: {
@@ -44,8 +46,8 @@ var generatePin = function (index) {
       type: generateRandomHouseType(),
     },
     location: {
-      x: generateRandomNumber(X_MIN_LIMIT, X_MAX_LIMIT) - X_OFFSET,
-      y: generateRandomNumber(Y_MIN_LIMIT, Y_MAX_LIMIT) - Y_OFFSET,
+      x: generateRandomNumber(X_LIMIT_MIN, X_LIMIT_MAX) - X_OFFSET,
+      y: generateRandomNumber(Y_LIMIT_MIN, Y_LIMIT_MAX) - Y_OFFSET,
     }
   };
 };
@@ -160,6 +162,49 @@ var onFieldTimeOutElementChange = function () {
   fieldTimeInElement.selectedIndex = fieldTimeOutElement.selectedIndex;
 };
 
+var onMapMainPinElementMouseDown = function (evtMouseDown) {
+  evtMouseDown.preventDefault();
+
+  var startCoords = {
+    x: evtMouseDown.clientX,
+    y: evtMouseDown.clientY
+  };
+
+  var onDocumentMouseMove = function (evtMouseMove) {
+    evtMouseMove.preventDefault();
+
+    var shift = {
+      x: startCoords.x - evtMouseMove.clientX,
+      y: startCoords.y - evtMouseMove.clientY
+    };
+
+    startCoords = {
+      x: evtMouseMove.clientX,
+      y: evtMouseMove.clientY
+    };
+
+    var y = parseInt(mapMainPinElement.style.top, 10) - shift.y;
+    var x = parseInt(mapMainPinElement.style.left, 10) - shift.x;
+
+    y = Math.max(Y_LIMIT_MIN, Math.min(Y_LIMIT_MAX, y));
+    x = Math.max(X_LIMIT_MIN, Math.min(X_LIMIT_MAX, x));
+
+    mapMainPinElement.style.top = y + 'px';
+    mapMainPinElement.style.left = x + 'px';
+  };
+
+  var onDocumentMouseUp = function (evtMouseUp) {
+    evtMouseUp.preventDefault();
+
+    document.removeEventListener('mousemove', onDocumentMouseMove);
+    document.removeEventListener('mouseup', onDocumentMouseUp);
+  };
+
+  document.addEventListener('mousemove', onDocumentMouseMove);
+  document.addEventListener('mouseup', onDocumentMouseUp);
+};
+
+
 var mapElement = document.querySelector('.map');
 
 var filtersElement = mapElement.querySelector('.map__filters');
@@ -186,3 +231,5 @@ deactivateFilters();
 setDefaultFieldAdress();
 
 mapMainPinElement.addEventListener('click', onMapMainPinElementClick);
+mapMainPinElement.addEventListener('mousedown', onMapMainPinElementMouseDown);
+

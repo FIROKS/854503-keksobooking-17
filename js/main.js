@@ -16,13 +16,6 @@ var Y_LIMIT_MAX = 630;
 var X_OFFSET = 20;
 var Y_OFFSET = 40;
 
-var TypeToPriceMap = {
-  palace: 10000,
-  house: 5000,
-  flat: 1000,
-  bungalo: 0
-};
-
 var generateRandomHouseType = function () {
   return HOUSE_TYPES[generateRandomNumber(0, HOUSE_TYPES.length - 1)];
 };
@@ -72,14 +65,6 @@ var createPinElement = function (pin) {
   return pinElement;
 };
 
-var disableElement = function (element) {
-  element.setAttribute('disabled', '');
-};
-
-var activateElement = function (element) {
-  element.removeAttribute('disabled');
-};
-
 var renderPins = function (pins) {
   var fragment = document.createDocumentFragment();
 
@@ -98,59 +83,13 @@ var destroyPins = function () {
     });
 };
 
-var activateForm = function () {
-  mapElement.classList.remove('map--faded');
-  formElement.classList.remove('ad-form--disabled');
-
-  formFieldsetElements.forEach(activateElement);
-
-  fieldTypeElement.addEventListener('change', onFieldTypeElementChange);
-  fieldTimeInElement.addEventListener('change', onFieldTimeInElementChange);
-  fieldTimeOutElement.addEventListener('change', onFieldTimeOutElementChange);
-};
-
-
-var deactivateForm = function () {
-  mapElement.classList.add('map--faded');
-  formElement.classList.add('ad-form--disabled');
-
-  formFieldsetElements.forEach(disableElement);
-
-  fieldTypeElement.removeEventListener('change', onFieldTypeElementChange);
-  fieldTimeInElement.removeEventListener('change', onFieldTimeInElementChange);
-  fieldTimeOutElement.removeEventListener('change', onFieldTimeOutElementChange);
-};
-
-var setDefaultFieldAdress = function () {
-  var mainPinCoordinates = mapMainPinElement.getBoundingClientRect();
-  var mapCoordinates = mapElement.getBoundingClientRect();
-  var x = mainPinCoordinates.x - mapCoordinates.x;
-  var y = mainPinCoordinates.y - mapCoordinates.y;
-
-  fieldAddressElement.value = x + ',' + y;
-};
-
 var onMapMainPinElementClick = function () {
-  activateForm(); // window.form.render
+  window.form.activate(); // window.form.render
   window.filters.activate();
+  activateMap();
   renderPins(pins); // window.pins.render
 
   mapMainPinElement.removeEventListener('click', onMapMainPinElementClick);
-};
-
-var onFieldTypeElementChange = function () {
-  var price = TypeToPriceMap[fieldTypeElement.value];
-
-  fieldPriceElement.min = price;
-  fieldPriceElement.placeholder = price;
-};
-
-var onFieldTimeInElementChange = function () {
-  fieldTimeOutElement.selectedIndex = fieldTimeInElement.selectedIndex;
-};
-
-var onFieldTimeOutElementChange = function () {
-  fieldTimeInElement.selectedIndex = fieldTimeOutElement.selectedIndex;
 };
 
 var onMapMainPinElementMouseDown = function (evtMouseDown) {
@@ -195,6 +134,13 @@ var onMapMainPinElementMouseDown = function (evtMouseDown) {
   document.addEventListener('mouseup', onDocumentMouseUp);
 };
 
+var activateMap = function () {
+  mapElement.classList.remove('map--faded');
+};
+
+var deactivateMap = function () {
+  mapElement.classList.add('map--faded');
+};
 
 var mapElement = document.querySelector('.map');
 
@@ -202,21 +148,13 @@ var mapMainPinElement = mapElement.querySelector('.map__pin--main');
 var mapPinsElements = mapElement.querySelector('.map__pins');
 var mapPinTemplateElement = document.querySelector('#pin').content.querySelector('.map__pin');
 
-var formElement = document.querySelector('.ad-form');
-var formFieldsetElements = formElement.querySelectorAll('fieldset');
-var fieldAddressElement = formElement.querySelector('#address');
-var fieldPriceElement = formElement.querySelector('#price');
-var fieldTypeElement = formElement.querySelector('#type');
-var fieldTimeInElement = formElement.querySelector('#timein');
-var fieldTimeOutElement = formElement.querySelector('#timeout');
-
-var pins = generatePins(PINS_LIMIT);  // window.pins.generate(PINS_LIMIT);
+var pins = generatePins(PINS_LIMIT); // window.pins.generate(PINS_LIMIT);
 
 destroyPins(); // window.pins.destroy();
-deactivateForm(); // window.form.deactivate();
+window.form.deactivate();
 window.filters.deactivate();
-
-setDefaultFieldAdress(); // form
+deactivateMap();
+window.form.setFieldAdress(); // TODO
 
 mapMainPinElement.addEventListener('click', onMapMainPinElementClick);
 mapMainPinElement.addEventListener('mousedown', onMapMainPinElementMouseDown);

@@ -1,7 +1,6 @@
 'use strict';
 
-var PINS_LIMIT = 8;
-
+var SERVER_URL = 'https://js.dump.academy/keksobooking/data';
 
 var mainPinCoordinates = window.mainPin.getCoordinates();
 
@@ -9,9 +8,10 @@ window.mainPin.setClickCallback(function () {
   window.map.activate();
   window.form.activate();
   window.filters.activate();
-  window.pins.render(
-      window.pins.generate(PINS_LIMIT)
-  );
+
+  // window.dataExchange.load(SERVER_URL)
+  // window.pins.render(
+  // );
 });
 
 window.mainPin.setMoveCallback(function (x, y) {

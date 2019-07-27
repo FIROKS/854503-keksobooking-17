@@ -11,7 +11,7 @@
   };
 
   var onSuccess = function(data) {
-    console.log(data);
+    return data;
   };
 
   var onError = function (message) {
@@ -32,10 +32,13 @@
     xhr.addEventListener('error', onError('Произошла ошибка соединения.')); // Как передать текст?   function () {onError('Произошла ошибка соединения.')}
     xhr.addEventListener('timeout', onTimeoutError);
 
-    xhr.open('get', serverUrl);
+    xhr.open('GET', serverUrl);
     xhr.send();
-  };
 
+    console.log(xhr.);
+  };
+  debugger;
+  console.log(loadData('https://js.dump.academy/keksobooking/data'));
   window.dataExchange = {
     load: loadData
   };

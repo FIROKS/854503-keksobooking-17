@@ -1,6 +1,8 @@
 'use strict';
 
 var PINS_LIMIT = 8;
+
+
 var mainPinCoordinates = window.mainPin.getCoordinates();
 
 window.mainPin.setClickCallback(function () {

@@ -15,6 +15,7 @@
   };
 
   var renderPins = function (pins) {
+    console.log(pins);
     var fragment = document.createDocumentFragment();
     pins.forEach(function (pin) {
       fragment.appendChild(createPinElement(pin));

@@ -1,13 +1,21 @@
 'use strict';
 
 var mainPinCoordinates = window.mainPin.getCoordinates();
+var cachedPins;
 
-var onLoadSuccess = function (pins) {
+var onLoadSuccess = function (loadedPins)  {
   window.map.activate();
   window.form.activate();
   window.filters.activate();
-  window.pins.render(pins);
+
+  cachedPins = loadedPins;
+  window.pins.render(window.filters.filterPins(cachedPins));
 };
+
+window.filters.setChangeCallback(function () {
+  window.pins.destroy();
+  window.pins.render(window.filters.filterPins(cachedPins));
+});
 
 var onLoadError = function () {
   window.messages.createErrorMessage();

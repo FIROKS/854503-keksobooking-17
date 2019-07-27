@@ -8,7 +8,6 @@
   var Y_LIMIT_MAX = 630;
 
   var onMapMainPinElementClick = function () {
-
     if (typeof clickCallback === 'function') {
       clickCallback();
     }

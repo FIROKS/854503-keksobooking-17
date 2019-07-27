@@ -33,7 +33,7 @@
   filtersElement.addEventListener('change', function () {
     if (typeof changeCallback === 'function') {
       changeCallback();
-    };
+    }
   });
 
   var changeCallback;
@@ -82,13 +82,13 @@
     },
     filterPins: function (pins) {
       return pins
-        .filter(function(pin) {
+        .filter(function (pin) {
           return (
             filterByType(pin) &&
             filterByGuests(pin) &&
             filterByRooms(pin) &&
             filterByPrice(pin)
-          )
+          );
         })
         .slice(0, PINS_LIMIT);
     },

@@ -3,7 +3,7 @@
 var mainPinCoordinates = window.mainPin.getCoordinates();
 var cachedPins;
 
-var onLoadSuccess = function (loadedPins)  {
+var onLoadSuccess = function (loadedPins) {
   window.map.activate();
   window.form.activate();
   window.filters.activate();

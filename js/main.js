@@ -10,6 +10,9 @@ var onLoadSuccess = function (loadedPins) {
 
   cachedPins = loadedPins;
   window.pins.render(window.filters.filterPins(cachedPins));
+
+  window.card.render(cachedPins[1]);
+  console.log(cachedPins[1]);
 };
 
 window.filters.setChangeCallback(function () {

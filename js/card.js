@@ -2,7 +2,7 @@
 
 (function () {
 
-  var typeToAnotherType = {
+  var TypeToText = {
     flat: 'Квартира',
     bungalo: 'Бунгало',
     house: 'Дом',
@@ -25,48 +25,39 @@
     var newOfferCardTimeElement = newOfferCardElement.querySelector('.popup__text--time');
 
     var newOfferCardFeaturesElement = newOfferCardElement.querySelector('.popup__features');
-    var newOfferCardFeatureElements = newOfferCardFeaturesElement.querySelectorAll('.popup__feature');
 
     var newOfferCardDescriptionElement = newOfferCardElement.querySelector('.popup__description');
     var newOfferCardPhotosElement = newOfferCardElement.querySelector('.popup__photos');
-
-    var newOfferCardPhotoElement = newOfferCardPhotosElement.querySelectorAll('.popup__photo');
 
     var newOfferCardAvatarElement = newOfferCardElement.querySelector('.popup__avatar');
 
     newOfferCardTitleElement.textContent = data.offer.title;
     newOfferCardAddressElement.textContent = data.offer.address;
-    newOfferCardPriceElement.textContent = OFFER_PRICE.replace('{offer.price}', data.offer.price);
-    newOfferCardTypeElement.textContent = typeToAnotherType[data.offer.type];
-    newOfferCardCapacityElement.textContent = OFFER_CAPACITY.
-      replace('{offer.rooms}', data.offer.rooms).
-      replace('{offer.guests}', data.offer.guests);
+    newOfferCardPriceElement.textContent = OFFER_PRICE
+      .replace('{offer.price}', data.offer.price);
 
-    newOfferCardTimeElement.textContent = OFFER_TIME.
-      replace('{offer.checkin}', data.offer.checkin).
-      replace('{offer.checkout}', data.offer.checkout);
+    newOfferCardTypeElement.textContent = TypeToText[data.offer.type];
+    newOfferCardCapacityElement.textContent = OFFER_CAPACITY
+      .replace('{offer.rooms}', data.offer.rooms)
+      .replace('{offer.guests}', data.offer.guests);
 
-    newOfferCardFeatureElements.forEach(function (element) {
-      element.remove();
-    });
-    newOfferCardFeaturesElement.appendChild(renderFeatures(data.offer.features));
+    newOfferCardTimeElement.textContent = OFFER_TIME
+      .replace('{offer.checkin}', data.offer.checkin)
+      .replace('{offer.checkout}', data.offer.checkout);
+    newOfferCardFeaturesElement.innerHTML = '';
+    newOfferCardFeaturesElement.appendChild(formingFeatures(data.offer.features));
 
     newOfferCardDescriptionElement.textContent = data.offer.description;
     newOfferCardAvatarElement.src = data.author.avatar;
 
-    newOfferCardPhotoElement.forEach(function (element) {
-      element.remove();
-    });
-    newOfferCardPhotosElement.appendChild(renderPhotos(data.offer.photos));
+    newOfferCardPhotosElement.innerHTML = '';
+    newOfferCardPhotosElement.appendChild(formingPhotos(data.offer.photos));
 
     return newOfferCardElement;
   };
 
   var renderCard = function (data) {
-    var fragment = document.createDocumentFragment();
-
-    fragment.appendChild(createCard(data));
-    mainElement.appendChild(fragment);
+    mainElement.appendChild(createCard(data));
   };
 
   var createFeature = function (featureData) {
@@ -76,7 +67,7 @@
     return newCardFeatureElement;
   };
 
-  var renderFeatures = function (features) {
+  var formingFeatures = function (features) {
     var fragment = document.createDocumentFragment();
 
     features.forEach(function (feature) {
@@ -94,7 +85,7 @@
     return newPhotoElement;
   };
 
-  var renderPhotos = function (photos) {
+  var formingPhotos = function (photos) {
     var fragment = document.createDocumentFragment();
 
     photos.forEach(function (photo) {

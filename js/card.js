@@ -44,14 +44,15 @@
     newOfferCardTimeElement.textContent = OFFER_TIME
       .replace('{offer.checkin}', data.offer.checkin)
       .replace('{offer.checkout}', data.offer.checkout);
+
     newOfferCardFeaturesElement.innerHTML = '';
-    newOfferCardFeaturesElement.appendChild(formingFeatures(data.offer.features));
+    newOfferCardFeaturesElement.appendChild(createFeaturesFragment(data.offer.features));
 
     newOfferCardDescriptionElement.textContent = data.offer.description;
     newOfferCardAvatarElement.src = data.author.avatar;
 
     newOfferCardPhotosElement.innerHTML = '';
-    newOfferCardPhotosElement.appendChild(formingPhotos(data.offer.photos));
+    newOfferCardPhotosElement.appendChild(createPhotosFragment(data.offer.photos));
 
     return newOfferCardElement;
   };
@@ -60,24 +61,30 @@
     mainElement.appendChild(createCard(data));
   };
 
-  var createFeature = function (featureData) {
+  var destroyCard = function () {
+    var cardElement = mainElement.querySelector('.map__card');
+
+    cardElement.remove();
+  };
+
+  var createFeatureElement = function (featureData) {
     var newCardFeatureElement = cardFeatureTemplateElement.cloneNode();
 
     newCardFeatureElement.classList.add('popup__feature--' + featureData);
     return newCardFeatureElement;
   };
 
-  var formingFeatures = function (features) {
+  var createFeaturesFragment = function (features) {
     var fragment = document.createDocumentFragment();
 
     features.forEach(function (feature) {
-      fragment.appendChild(createFeature(feature));
+      fragment.appendChild(createFeatureElement(feature));
     });
 
     return fragment;
   };
 
-  var createPhoto = function (photoData) {
+  var createPhotoElement = function (photoData) {
     var newPhotoElement = cardPhotoTemplateElement.cloneNode();
 
     newPhotoElement.src = photoData;
@@ -85,11 +92,11 @@
     return newPhotoElement;
   };
 
-  var formingPhotos = function (photos) {
+  var createPhotosFragment = function (photos) {
     var fragment = document.createDocumentFragment();
 
     photos.forEach(function (photo) {
-      fragment.appendChild(createPhoto(photo));
+      fragment.appendChild(createPhotoElement(photo));
     });
 
     return fragment;
@@ -102,9 +109,8 @@
   var cardPhotoTemplateElement = cardTemplateElement.querySelector('.popup__photo');
 
   window.card = {
-    render: function (data) {
-      renderCard(data);
-    }
+    render: renderCard,
+    destroy: destroyCard
   };
 
 })();

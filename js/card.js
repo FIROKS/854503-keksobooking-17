@@ -88,17 +88,6 @@
     return fragment;
   };
 
-
-  // var createCloseElementClickHandle = function (closeElement) {
-  //   return function (evt) {
-  //     evt.preventDefault();
-
-  //     //closeElement.removeEventListener('click', createCloseElementClickHandle);
-  //     destroyCard();
-  //     console.log('sdaf');
-  //   };
-  // };
-
   var onCloseElementClick = function (evtClick) {
     evtClick.preventDefault();
 
@@ -119,7 +108,6 @@
 
 
     closeElement.addEventListener('click', onCloseElementClick);
-    // closeElement.addEventListener('click', createCloseElementClickHandle(closeElement)); Почему так не работает?
     document.addEventListener('keydown', onEscPressed);
 
 

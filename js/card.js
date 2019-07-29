@@ -10,61 +10,47 @@
   };
 
   var OFFER_PRICE = '{offer.price} ₽/ночь.';
-
   var OFFER_CAPACITY = '{offer.rooms} комнаты для {offer.guests} гостей.';
-
   var OFFER_TIME = 'Заезд после {offer.checkin}, выезд до {offer.checkout}.';
 
-  var createCard = function (data) {
-    var newOfferCardElement = cardTemplateElement.cloneNode(true);
-    var newOfferCardTitleElement = newOfferCardElement.querySelector('.popup__title');
-    var newOfferCardAddressElement = newOfferCardElement.querySelector('.popup__text--address');
-    var newOfferCardPriceElement = newOfferCardElement.querySelector('.popup__text--price');
-    var newOfferCardTypeElement = newOfferCardElement.querySelector('.popup__type');
-    var newOfferCardCapacityElement = newOfferCardElement.querySelector('.popup__text--capacity');
-    var newOfferCardTimeElement = newOfferCardElement.querySelector('.popup__text--time');
+  var createCardElement = function (pinData) {
+    var cardElement = cardTemplateElement.cloneNode(true);
 
-    var newOfferCardFeaturesElement = newOfferCardElement.querySelector('.popup__features');
+    var cardTitleElement = cardElement.querySelector('.popup__title');
+    var cardAddressElement = cardElement.querySelector('.popup__text--address');
+    var cardPriceElement = cardElement.querySelector('.popup__text--price');
+    var cardTypeElement = cardElement.querySelector('.popup__type');
+    var cardCapacityElement = cardElement.querySelector('.popup__text--capacity');
+    var cardTimeElement = cardElement.querySelector('.popup__text--time');
+    var cardFeaturesElement = cardElement.querySelector('.popup__features');
+    var cardDescriptionElement = cardElement.querySelector('.popup__description');
+    var cardPhotosElement = cardElement.querySelector('.popup__photos');
+    var cardAvatarElement = cardElement.querySelector('.popup__avatar');
 
-    var newOfferCardDescriptionElement = newOfferCardElement.querySelector('.popup__description');
-    var newOfferCardPhotosElement = newOfferCardElement.querySelector('.popup__photos');
+    cardAddressElement.textContent = pinData.offer.address;
+    cardAvatarElement.src = pinData.author.avatar;
+    cardTitleElement.textContent = pinData.offer.title;
+    cardTypeElement.textContent = TypeToText[pinData.offer.type];
+    cardDescriptionElement.textContent = pinData.offer.description;
 
-    var newOfferCardAvatarElement = newOfferCardElement.querySelector('.popup__avatar');
+    cardPriceElement.textContent = OFFER_PRICE
+      .replace('{offer.price}', pinData.offer.price);
 
-    newOfferCardTitleElement.textContent = data.offer.title;
-    newOfferCardAddressElement.textContent = data.offer.address;
-    newOfferCardPriceElement.textContent = OFFER_PRICE
-      .replace('{offer.price}', data.offer.price);
+    cardCapacityElement.textContent = OFFER_CAPACITY
+      .replace('{offer.rooms}', pinData.offer.rooms)
+      .replace('{offer.guests}', pinData.offer.guests);
 
-    newOfferCardTypeElement.textContent = TypeToText[data.offer.type];
-    newOfferCardCapacityElement.textContent = OFFER_CAPACITY
-      .replace('{offer.rooms}', data.offer.rooms)
-      .replace('{offer.guests}', data.offer.guests);
+    cardTimeElement.textContent = OFFER_TIME
+      .replace('{offer.checkin}', pinData.offer.checkin)
+      .replace('{offer.checkout}', pinData.offer.checkout);
 
-    newOfferCardTimeElement.textContent = OFFER_TIME
-      .replace('{offer.checkin}', data.offer.checkin)
-      .replace('{offer.checkout}', data.offer.checkout);
+    cardFeaturesElement.innerHTML = '';
+    cardFeaturesElement.appendChild(createFeaturesFragment(pinData.offer.features));
 
-    newOfferCardFeaturesElement.innerHTML = '';
-    newOfferCardFeaturesElement.appendChild(createFeaturesFragment(data.offer.features));
+    cardPhotosElement.innerHTML = '';
+    cardPhotosElement.appendChild(createPhotosFragment(pinData.offer.photos));
 
-    newOfferCardDescriptionElement.textContent = data.offer.description;
-    newOfferCardAvatarElement.src = data.author.avatar;
-
-    newOfferCardPhotosElement.innerHTML = '';
-    newOfferCardPhotosElement.appendChild(createPhotosFragment(data.offer.photos));
-
-    return newOfferCardElement;
-  };
-
-  var renderCard = function (data) {
-    mainElement.appendChild(createCard(data));
-  };
-
-  var destroyCard = function () {
-    var cardElement = mainElement.querySelector('.map__card');
-
-    cardElement.remove();
+    return cardElement;
   };
 
   var createFeatureElement = function (featureData) {
@@ -102,14 +88,52 @@
     return fragment;
   };
 
-  var mainElement = document.querySelector('main');
+  var onCloseElementClick = function (evtClick) {
+    evtClick.preventDefault();
 
+    destroyCard();
+  };
+
+  var onEscPressed = function (evtKeyPressed) {
+    evtKeyPressed.preventDefault();
+
+    if (evtKeyPressed.keyCode === 27) {
+      destroyCard();
+    }
+  };
+
+  var createCard = function (pin) {
+    var element = createCardElement(pin);
+    var closeElement = element.querySelector('.popup__close');
+
+
+    closeElement.addEventListener('click', onCloseElementClick);
+    document.addEventListener('keydown', onEscPressed);
+
+
+    mainElement.appendChild(element);
+  };
+
+  var destroyCard = function () {
+    var element = mainElement.querySelector('.map__card');
+
+    if (!element) {
+      return;
+    }
+    var closeElement = element.querySelector('.popup__close');
+    closeElement.removeEventListener('click', onCloseElementClick);
+    document.removeEventListener('keydown', onEscPressed);
+
+    element.remove();
+  };
+
+  var mainElement = document.querySelector('main');
   var cardTemplateElement = document.querySelector('#card').content.querySelector('.map__card');
   var cardFeatureTemplateElement = cardTemplateElement.querySelector('.popup__feature');
   var cardPhotoTemplateElement = cardTemplateElement.querySelector('.popup__photo');
 
   window.card = {
-    render: renderCard,
+    create: createCard,
     destroy: destroyCard
   };
 

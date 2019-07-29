@@ -16,8 +16,17 @@
 
   var renderPins = function (pins) {
     var fragment = document.createDocumentFragment();
+
     pins.forEach(function (pin) {
-      fragment.appendChild(createPinElement(pin));
+      var element = createPinElement(pin);
+
+      element.addEventListener('click', function () {
+        if (typeof clickCallback === 'function') {
+          clickCallback(pin);
+        }
+      });
+
+      fragment.appendChild(element);
     });
 
     mapPinsElements.appendChild(fragment);
@@ -31,13 +40,17 @@
       });
   };
 
+  var clickCallback;
   var mapElement = document.querySelector('.map');
   var mapPinsElements = mapElement.querySelector('.map__pins');
   var mapPinTemplateElement = document.querySelector('#pin').content.querySelector('.map__pin');
 
   window.pins = {
     render: renderPins,
-    destroy: destroyPins
+    destroy: destroyPins,
+    setPinClickCallback: function (callback) {
+      clickCallback = callback;
+    }
   };
 
 })();

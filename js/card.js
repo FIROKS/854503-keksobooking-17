@@ -119,7 +119,7 @@
 
 
     closeElement.addEventListener('click', onCloseElementClick);
-    //closeElement.addEventListener('click', createCloseElementClickHandle(closeElement)); Почему так не работает?
+    // closeElement.addEventListener('click', createCloseElementClickHandle(closeElement)); Почему так не работает?
     document.addEventListener('keydown', onEscPressed);
 
 

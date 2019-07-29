@@ -20,9 +20,7 @@
     pins.forEach(function (pin) {
       var element = createPinElement(pin);
 
-      element.addEventListener('click', function () { // @NOTICE: почему не удаляют после? Потому что возможно повторное нажатие.
-        // Для каждого элемента pins мы "зашиваем" информацию, содержащуюся в pin.
-
+      element.addEventListener('click', function () {
         if (typeof clickCallback === 'function') {
           clickCallback(pin);
         }

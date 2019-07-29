@@ -3,6 +3,15 @@
 var mainPinCoordinates = window.mainPin.getCoordinates();
 var cachedPins;
 
+
+var deactivateApplication = function () {
+  window.map.deactivate();
+  window.form.deactivate();
+  window.filters.deactivate();
+  window.pins.destroy();
+  window.card.destroy();
+};
+
 var onLoadSuccess = function (loadedPins) {
   window.map.activate();
   window.form.activate();
@@ -10,8 +19,6 @@ var onLoadSuccess = function (loadedPins) {
 
   cachedPins = loadedPins;
   window.pins.render(window.filters.filterPins(cachedPins));
-
-  window.card.render(cachedPins[0]);
 };
 
 window.filters.setChangeCallback(function () {
@@ -33,11 +40,17 @@ window.mainPin.setMoveCallback(function (x, y) {
 
 window.form.setSubmitCallback(function () {
   // console.log('form is sumbit');
+  // deactivateApplication();
 });
 
-window.map.deactivate();
-window.form.deactivate();
-window.filters.deactivate();
-window.pins.destroy();
+
+window.pins.setPinClickCallback(function (pin) {
+  window.card.destroy();
+  window.card.create(pin);
+});
+
 
 window.form.setFieldAdress(mainPinCoordinates.x, mainPinCoordinates.y);
+
+
+deactivateApplication();

@@ -10,6 +10,13 @@
     bungalo: 0
   };
 
+  var RoomNumberToCapacityMap = {
+    '1': ['1'],
+    '2': ['1', '2'],
+    '3': ['1', '2', '3'],
+    '100': ['0']
+  };
+
   var activateForm = function () {
     formElement.classList.remove('ad-form--disabled');
     formFieldsetElements.forEach(activateElement);
@@ -17,6 +24,9 @@
     fieldTypeElement.addEventListener('change', onFieldTypeElementChange);
     fieldTimeInElement.addEventListener('change', onFieldTimeInElementChange);
     fieldTimeOutElement.addEventListener('change', onFieldTimeOutElementChange);
+    fieldRoomNumberElement.addEventListener('change', onFieldRoomNumberElementChange);
+
+    validateCapacity();
   };
 
   var deactivateForm = function () {
@@ -26,6 +36,7 @@
     fieldTypeElement.removeEventListener('change', onFieldTypeElementChange);
     fieldTimeInElement.removeEventListener('change', onFieldTimeInElementChange);
     fieldTimeOutElement.removeEventListener('change', onFieldTimeOutElementChange);
+    fieldRoomNumberElement.removeEventListener('change', onFieldRoomNumberElementChange);
   };
 
   var disableElement = function (element) {
@@ -34,6 +45,18 @@
 
   var activateElement = function (element) {
     element.removeAttribute('disabled');
+  };
+
+  var validateCapacity = function () {
+    var capacities = RoomNumberToCapacityMap[fieldRoomNumberElement.value];
+
+    fieldCapacityElements.forEach(function (option) {
+      if (capacities.includes(option.value)) {
+        activateElement(option);
+      } else {
+        disableElement(option);
+      }
+    });
   };
 
   var onFieldTypeElementChange = function () {
@@ -52,11 +75,14 @@
   };
 
   var onFormElementSubmit = function () {
-
     if (typeof submitCallback === 'function') {
       submitCallback();
     }
     formElement.removeEventListener('submit', onFormElementSubmit);
+  };
+
+  var onFieldRoomNumberElementChange = function () {
+    validateCapacity();
   };
 
   var submitCallback;
@@ -68,6 +94,10 @@
   var fieldTypeElement = formElement.querySelector('#type');
   var fieldTimeInElement = formElement.querySelector('#timein');
   var fieldTimeOutElement = formElement.querySelector('#timeout');
+  var fieldRoomNumberElement = formElement.querySelector('#room_number');
+
+  var fieldCapacityElement = formElement.querySelector('#capacity');
+  var fieldCapacityElements = fieldCapacityElement.querySelectorAll('option');
 
   formElement.addEventListener('submit', onFormElementSubmit);
 

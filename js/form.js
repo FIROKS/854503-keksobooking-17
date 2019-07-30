@@ -48,9 +48,10 @@
   };
 
   var validateCapacity = function () {
-    fieldCapacityElements.forEach(function (option) {
+    var capacities = RoomNumberToCapacityMap[fieldRoomNumberElement.value];
 
-      if (RoomNumberToCapacityMap[fieldRoomNumberElement.value].includes(option.value)) {
+    fieldCapacityElements.forEach(function (option) {
+      if (capacities.includes(option.value)) {
         activateElement(option);
       } else {
         disableElement(option);
@@ -97,12 +98,6 @@
 
   var fieldCapacityElement = formElement.querySelector('#capacity');
   var fieldCapacityElements = fieldCapacityElement.querySelectorAll('option');
-
-
-
-
-  // var fieldRoomNumberElements = fieldRoomNumberElement.querySelectorAll('option');
-  // var fieldRoomNumberSelectedElement = fieldRoomNumberElements.querySelector('option');
 
   formElement.addEventListener('submit', onFormElementSubmit);
 

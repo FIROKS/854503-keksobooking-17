@@ -32,6 +32,7 @@ var onLoadError = function () {
 
 var onUploadSuccess = function () {
   deactivateApplication();
+  window.messages.createSuccessMessage();
   console.log('success');
 };
 

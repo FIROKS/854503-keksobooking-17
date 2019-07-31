@@ -6,7 +6,9 @@
 
   var renderErrorElement = function () {
     var errorMessageElement = errorTemplateElement.cloneNode(true);
+    var closeElement = errorMessageElement.querySelector('.error__button');
 
+    closeElement.addEventListener('click', onCloseElementClick);
     document.addEventListener('keydown', createOnEscPressHandler(errorMessageElement));
     document.addEventListener('click', createOnClickHandler(errorMessageElement));
 
@@ -19,6 +21,9 @@
 
   var renderSuccessMessage = function () {
     var successMessageElement = successTemplateElement.cloneNode(true);
+
+    document.addEventListener('keydown', createOnEscPressHandler(successMessageElement));
+    document.addEventListener('click', createOnClickHandler(successMessageElement));
 
     mainBlockElement.appendChild(successMessageElement);
   };
@@ -50,6 +55,19 @@
 
   var deleteMessage = function (element) {
     element.remove();
+  };
+
+  var onCloseElementClick = function () {
+    var errorMessageElement = mainBlockElement.querySelector('.error');
+
+    if (!errorMessageElement) {
+      return;
+    }
+
+    document.removeEventListener('keydown', createOnEscPressHandler(errorMessageElement));
+    document.removeEventListener('click', createOnClickHandler(errorMessageElement));
+
+    deleteMessage(errorMessageElement);
   };
 
   var mainBlockElement = document.querySelector('main');

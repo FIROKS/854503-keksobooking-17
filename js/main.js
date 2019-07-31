@@ -24,6 +24,7 @@ var onLoadSuccess = function (loadedPins) {
 
 window.filters.setChangeCallback(function () {
   window.pins.destroy();
+  window.card.destroy();
   window.pins.render(window.filters.filterPins(cachedPins));
 });
 

@@ -60,6 +60,11 @@
     document.addEventListener('mouseup', onDocumentMouseUp);
   };
 
+  var setDefaultPosition = function (x, y) {
+    mapMainPinElement.style.top = y + 'px';
+    mapMainPinElement.style.left = x + 'px';
+  };
+
   var clickCallback;
   var moveCallback;
   var mapElement = document.querySelector('.map');
@@ -80,6 +85,7 @@
         x: parseInt(mapMainPinElement.style.left, 10),
         y: parseInt(mapMainPinElement.style.top, 10)
       };
-    }
+    },
+    deactivate: setDefaultPosition
   };
 })();

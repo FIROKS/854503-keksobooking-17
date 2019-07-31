@@ -9,6 +9,14 @@ var deactivateApplication = function () {
   window.filters.deactivate();
   window.pins.destroy();
   window.card.destroy();
+  window.mainPin.deactivate(
+      defaultMainPinCoordinates.x,
+      defaultMainPinCoordinates.y
+  );
+  window.form.setFieldAdress(
+      defaultMainPinCoordinates.x,
+      defaultMainPinCoordinates.y
+  );
 };
 
 var onLoadSuccess = function (loadedPins) {

@@ -21,22 +21,26 @@
     formElement.classList.remove('ad-form--disabled');
     formFieldsetElements.forEach(activateElement);
 
+    formElement.addEventListener('submit', onFormElementSubmit);
     fieldTypeElement.addEventListener('change', onFieldTypeElementChange);
     fieldTimeInElement.addEventListener('change', onFieldTimeInElementChange);
     fieldTimeOutElement.addEventListener('change', onFieldTimeOutElementChange);
     fieldRoomNumberElement.addEventListener('change', onFieldRoomNumberElementChange);
-
-    validateCapacity();
+    formResetElement.addEventListener('click', onResetElementClick);
   };
 
   var deactivateForm = function () {
     formElement.classList.add('ad-form--disabled');
     formFieldsetElements.forEach(disableElement);
 
+    formElement.removeEventListener('submit', onFormElementSubmit);
     fieldTypeElement.removeEventListener('change', onFieldTypeElementChange);
     fieldTimeInElement.removeEventListener('change', onFieldTimeInElementChange);
     fieldTimeOutElement.removeEventListener('change', onFieldTimeOutElementChange);
     fieldRoomNumberElement.removeEventListener('change', onFieldRoomNumberElementChange);
+    formResetElement.removeEventListener('click', onResetElementClick);
+
+    validateCapacity();
   };
 
   var disableElement = function (element) {
@@ -74,18 +78,29 @@
     fieldTimeInElement.selectedIndex = fieldTimeOutElement.selectedIndex;
   };
 
-  var onFormElementSubmit = function () {
+  var onFormElementSubmit = function (evt) {
+    evt.preventDefault();
     if (typeof submitCallback === 'function') {
-      submitCallback();
+      submitCallback(new FormData(formElement));
     }
-    formElement.removeEventListener('submit', onFormElementSubmit);
   };
 
   var onFieldRoomNumberElementChange = function () {
     validateCapacity();
   };
 
+  var onResetElementClick = function (evt) {
+    evt.preventDefault();
+
+    formElement.reset();
+
+    if (typeof resetCallback === 'function') {
+      resetCallback();
+    }
+  };
+
   var submitCallback;
+  var resetCallback;
 
   var formElement = document.querySelector('.ad-form');
   var formFieldsetElements = formElement.querySelectorAll('fieldset');
@@ -99,7 +114,9 @@
   var fieldCapacityElement = formElement.querySelector('#capacity');
   var fieldCapacityElements = fieldCapacityElement.querySelectorAll('option');
 
-  formElement.addEventListener('submit', onFormElementSubmit);
+  var formResetElement = formElement.querySelector('.ad-form__reset');
+
+  validateCapacity();
 
   window.form = {
     activate: activateForm,
@@ -109,6 +126,12 @@
     },
     setSubmitCallback: function (callback) {
       submitCallback = callback;
+    },
+    resetSubmitCallback: function (callback) {
+      resetCallback = callback;
+    },
+    setResetCallback: function (callback) {
+      resetCallback = callback;
     }
   };
 

@@ -30,6 +30,15 @@ var onLoadError = function () {
   window.messages.createErrorMessage();
 };
 
+var onUploadSuccess = function () {
+  deactivateApplication();
+  console.log('success');
+};
+
+var onUploadError = function () {
+  window.messages.createSuccessMessage();
+};
+
 window.mainPin.setClickCallback(function () {
   window.backend.load(onLoadSuccess, onLoadError);
 });
@@ -38,9 +47,8 @@ window.mainPin.setMoveCallback(function (x, y) {
   window.form.setFieldAdress(x, y);
 });
 
-window.form.setSubmitCallback(function () {
-  // console.log('form is sumbit');
-  // deactivateApplication();
+window.form.setSubmitCallback(function (data) {
+  window.backend.upload(new FormData(data), onUploadSuccess, onUploadError);
 });
 
 

@@ -76,8 +76,10 @@
 
   var onFormElementSubmit = function () {
     if (typeof submitCallback === 'function') {
-      submitCallback();
-    }
+      submitCallback(formElement);
+    } else {
+      console.log('error');
+    };
     formElement.removeEventListener('submit', onFormElementSubmit);
   };
 

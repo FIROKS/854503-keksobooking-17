@@ -35,7 +35,7 @@
     });
 
     xhr.open('POST', URL_UPLOAD);
-    xhr.send();
+    xhr.send(data);
   };
 
   window.backend = {

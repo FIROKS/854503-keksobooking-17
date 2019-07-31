@@ -53,10 +53,9 @@
 
   var filterByFeatures = function (pin) {
     var selectedFeatures = getSelectedFeatures();
-    return (selectedFeatures.every(function (feature) {
+    return selectedFeatures.every(function (feature) {
       return pin.offer.features.includes(feature);
-    })
-    );
+    });
   };
 
 

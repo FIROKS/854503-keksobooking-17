@@ -43,10 +43,6 @@
     validateCapacity();
   };
 
-  var resetValues = function () {
-    formElement.reset();
-  };
-
   var disableElement = function (element) {
     element.setAttribute('disabled', '');
   };
@@ -96,8 +92,9 @@
   var onResetElementClick = function (evt) {
     evt.preventDefault();
 
+    formElement.reset();
+
     if (typeof resetCallback === 'function') {
-      resetValues();
       resetCallback();
     }
   };

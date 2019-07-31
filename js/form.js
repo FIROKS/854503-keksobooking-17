@@ -30,7 +30,6 @@
   };
 
   var deactivateForm = function () {
-    // @TODO: reset values
     formElement.classList.add('ad-form--disabled');
     formFieldsetElements.forEach(disableElement);
 
@@ -39,36 +38,13 @@
     fieldTimeInElement.removeEventListener('change', onFieldTimeInElementChange);
     fieldTimeOutElement.removeEventListener('change', onFieldTimeOutElementChange);
     fieldRoomNumberElement.removeEventListener('change', onFieldRoomNumberElementChange);
-    resetElement.addEventListener('click', onResetElementClick);
+    resetElement.removeEventListener('click', onResetElementClick);
 
     validateCapacity();
   };
 
   var resetValues = function () {
-    var elements = formElement.elements;
-    var fieldType;
-
-    validateCapacity();
-
-    for (var i = 0; i < elements.length; i++) {
-
-      fieldType = elements[i].type.toLowerCase();
-
-      switch (fieldType) {
-
-        case 'text':
-        case 'textarea':
-
-          elements[i].value = '';
-          break;
-
-        case 'checkbox':
-          if (elements[i].checked) {
-            elements[i].checked = false;
-          }
-          break;
-      }
-    }
+    formElement.reset();
   };
 
   var disableElement = function (element) {
@@ -121,9 +97,9 @@
     evt.preventDefault();
 
     if (typeof resetCallback === 'function') {
+      resetValues();
       resetCallback();
     }
-    //resetValues();
   };
 
   var submitCallback;
@@ -155,6 +131,9 @@
       submitCallback = callback;
     },
     resetSubmitCallback: function (callback) {
+      resetCallback = callback;
+    },
+    setResetCallback: function (callback) {
       resetCallback = callback;
     }
   };

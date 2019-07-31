@@ -51,9 +51,9 @@ window.mainPin.setMoveCallback(function (x, y) {
 window.form.setSubmitCallback(function (data) {
   window.backend.upload(onUploadSuccess, onUploadError, data);
 });
-debugger;
+
 window.form.setResetCallback(function () {
-  window.form.setFieldAdress(defaultMainPinCoordinates.x, defaultMainPinCoordinates.y);
+  deactivateApplication();
 });
 
 window.pins.setPinClickCallback(function (pin) {
@@ -62,8 +62,8 @@ window.pins.setPinClickCallback(function (pin) {
 });
 
 window.form.setFieldAdress(
-  defaultMainPinCoordinates.x,
-  defaultMainPinCoordinates.y
+    defaultMainPinCoordinates.x,
+    defaultMainPinCoordinates.y
 );
 
 deactivateApplication();

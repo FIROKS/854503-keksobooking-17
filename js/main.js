@@ -1,8 +1,7 @@
 'use strict';
 
-var mainPinCoordinates = window.mainPin.getCoordinates();
+var defaultMainPinCoordinates = window.mainPin.getCoordinates();
 var cachedPins;
-
 
 var deactivateApplication = function () {
   window.map.deactivate();
@@ -13,13 +12,14 @@ var deactivateApplication = function () {
 };
 
 var onLoadSuccess = function (loadedPins) {
+  cachedPins = loadedPins;
+
   window.map.activate();
   window.form.activate();
-  console.log(loadedPins);
   window.filters.activate();
-
-  cachedPins = loadedPins;
-  window.pins.render(window.filters.filterPins(cachedPins));
+  window.pins.render(
+      window.filters.filterPins(cachedPins)
+  );
 };
 
 window.filters.setChangeCallback(function () {
@@ -51,15 +51,19 @@ window.mainPin.setMoveCallback(function (x, y) {
 window.form.setSubmitCallback(function (data) {
   window.backend.upload(onUploadSuccess, onUploadError, data);
 });
-
+debugger;
+window.form.setResetCallback(function () {
+  window.form.setFieldAdress(defaultMainPinCoordinates.x, defaultMainPinCoordinates.y);
+});
 
 window.pins.setPinClickCallback(function (pin) {
   window.card.destroy();
   window.card.create(pin);
 });
 
-
-window.form.setFieldAdress(mainPinCoordinates.x, mainPinCoordinates.y);
-
+window.form.setFieldAdress(
+  defaultMainPinCoordinates.x,
+  defaultMainPinCoordinates.y
+);
 
 deactivateApplication();

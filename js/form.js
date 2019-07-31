@@ -21,22 +21,54 @@
     formElement.classList.remove('ad-form--disabled');
     formFieldsetElements.forEach(activateElement);
 
+    formElement.addEventListener('submit', onFormElementSubmit);
     fieldTypeElement.addEventListener('change', onFieldTypeElementChange);
     fieldTimeInElement.addEventListener('change', onFieldTimeInElementChange);
     fieldTimeOutElement.addEventListener('change', onFieldTimeOutElementChange);
     fieldRoomNumberElement.addEventListener('change', onFieldRoomNumberElementChange);
-
-    validateCapacity();
+    resetElement.addEventListener('click', onResetElementClick);
   };
 
   var deactivateForm = function () {
+    // @TODO: reset values
     formElement.classList.add('ad-form--disabled');
     formFieldsetElements.forEach(disableElement);
 
+    formElement.removeEventListener('submit', onFormElementSubmit);
     fieldTypeElement.removeEventListener('change', onFieldTypeElementChange);
     fieldTimeInElement.removeEventListener('change', onFieldTimeInElementChange);
     fieldTimeOutElement.removeEventListener('change', onFieldTimeOutElementChange);
     fieldRoomNumberElement.removeEventListener('change', onFieldRoomNumberElementChange);
+    resetElement.addEventListener('click', onResetElementClick);
+
+    validateCapacity();
+  };
+
+  var resetValues = function () {
+    var elements = formElement.elements;
+    var fieldType;
+
+    validateCapacity();
+
+    for (var i = 0; i < elements.length; i++) {
+
+      fieldType = elements[i].type.toLowerCase();
+
+      switch (fieldType) {
+
+        case 'text':
+        case 'textarea':
+
+          elements[i].value = '';
+          break;
+
+        case 'checkbox':
+          if (elements[i].checked) {
+            elements[i].checked = false;
+          }
+          break;
+      }
+    }
   };
 
   var disableElement = function (element) {
@@ -74,20 +106,28 @@
     fieldTimeInElement.selectedIndex = fieldTimeOutElement.selectedIndex;
   };
 
-  var onFormElementSubmit = function () {
+  var onFormElementSubmit = function (evt) {
+    evt.preventDefault();
     if (typeof submitCallback === 'function') {
-      submitCallback(formElement);
-    } else {
-      console.log('error');
-    };
-    formElement.removeEventListener('submit', onFormElementSubmit);
+      submitCallback(new FormData(formElement));
+    }
   };
 
   var onFieldRoomNumberElementChange = function () {
     validateCapacity();
   };
 
+  var onResetElementClick = function (evt) {
+    evt.preventDefault();
+
+    if (typeof resetCallback === 'function') {
+      resetCallback();
+    }
+    //resetValues();
+  };
+
   var submitCallback;
+  var resetCallback;
 
   var formElement = document.querySelector('.ad-form');
   var formFieldsetElements = formElement.querySelectorAll('fieldset');
@@ -101,7 +141,9 @@
   var fieldCapacityElement = formElement.querySelector('#capacity');
   var fieldCapacityElements = fieldCapacityElement.querySelectorAll('option');
 
-  formElement.addEventListener('submit', onFormElementSubmit);
+  var resetElement = formElement.querySelector('.ad-form__reset');
+
+  validateCapacity();
 
   window.form = {
     activate: activateForm,
@@ -111,6 +153,9 @@
     },
     setSubmitCallback: function (callback) {
       submitCallback = callback;
+    },
+    resetSubmitCallback: function (callback) {
+      resetCallback = callback;
     }
   };
 

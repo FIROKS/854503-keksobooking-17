@@ -3,6 +3,7 @@
 (function () {
   var URL_LOAD = 'https://js.dump.academy/keksobooking/data';
   var URL_UPLOAD = 'https://js.dump.academy/keksobooking';
+  var STATUS_CODE_OK = 200;
 
   var createServerRequest = function (method, url, onSuccess, onError, data) {
     var xhr = new XMLHttpRequest();
@@ -10,33 +11,38 @@
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
-        onSuccess(xhr.response); // Почему работало без xhr.response?
+      if (xhr.status === STATUS_CODE_OK) {
+        onSuccess(xhr.response);
       } else {
         onError();
       }
     });
 
-    xhr.open(method, url);
+    xhr.addEventListener('error', function () {
+      onError();
+    });
 
-    if (data === undefined) {
-      xhr.send();
-    } else {
-      xhr.send(data);
-    }
+    xhr.addEventListener('timeout', function () {
+      onError();
+    });
+
+    xhr.timeout = 1000;
+
+    xhr.open(method, url);
+    xhr.send(data);
   };
 
-  var loadPins = function (onSuccess, onError) {
+  var load = function (onSuccess, onError) {
     createServerRequest('GET', URL_LOAD, onSuccess, onError);
   };
 
-  var uploadForm = function (onSuccess, onError, data) {
-    createServerRequest('GET', URL_UPLOAD, onSuccess, onError, data);
+  var upload = function (onSuccess, onError, data) {
+    createServerRequest('POST', URL_UPLOAD, onSuccess, onError, data);
   };
 
   window.backend = {
-    load: loadPins,
-    upload: uploadForm
+    load: load,
+    upload: upload
   };
 
 })();

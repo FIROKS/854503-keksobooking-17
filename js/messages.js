@@ -49,7 +49,7 @@
       evtClick.preventDefault();
 
       deleteMessage(element);
-      document.addEventListener('click', createOnClickHandler(element));
+      document.removeEventListener('click', createOnClickHandler(element));
     };
   };
 

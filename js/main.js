@@ -15,6 +15,7 @@ var deactivateApplication = function () {
 var onLoadSuccess = function (loadedPins) {
   window.map.activate();
   window.form.activate();
+  console.log(loadedPins);
   window.filters.activate();
 
   cachedPins = loadedPins;
@@ -33,7 +34,6 @@ var onLoadError = function () {
 var onUploadSuccess = function () {
   deactivateApplication();
   window.messages.createSuccessMessage();
-  console.log('success');
 };
 
 var onUploadError = function () {
@@ -49,7 +49,7 @@ window.mainPin.setMoveCallback(function (x, y) {
 });
 
 window.form.setSubmitCallback(function (data) {
-  window.backend.upload(new FormData(data), onUploadSuccess, onUploadError);
+  window.backend.upload(onUploadSuccess, onUploadError, data);
 });
 
 

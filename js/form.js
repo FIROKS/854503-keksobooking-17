@@ -26,7 +26,7 @@
     fieldTimeInElement.addEventListener('change', onFieldTimeInElementChange);
     fieldTimeOutElement.addEventListener('change', onFieldTimeOutElementChange);
     fieldRoomNumberElement.addEventListener('change', onFieldRoomNumberElementChange);
-    resetElement.addEventListener('click', onResetElementClick);
+    formResetElement.addEventListener('click', onResetElementClick);
   };
 
   var deactivateForm = function () {
@@ -38,7 +38,7 @@
     fieldTimeInElement.removeEventListener('change', onFieldTimeInElementChange);
     fieldTimeOutElement.removeEventListener('change', onFieldTimeOutElementChange);
     fieldRoomNumberElement.removeEventListener('change', onFieldRoomNumberElementChange);
-    resetElement.removeEventListener('click', onResetElementClick);
+    formResetElement.removeEventListener('click', onResetElementClick);
 
     validateCapacity();
   };
@@ -114,7 +114,7 @@
   var fieldCapacityElement = formElement.querySelector('#capacity');
   var fieldCapacityElements = fieldCapacityElement.querySelectorAll('option');
 
-  var resetElement = formElement.querySelector('.ad-form__reset');
+  var formResetElement = formElement.querySelector('.ad-form__reset');
 
   validateCapacity();
 

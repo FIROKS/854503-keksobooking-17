@@ -111,11 +111,11 @@
     document.addEventListener('keydown', onEscPressed);
 
 
-    mainElement.appendChild(element);
+    mapElement.appendChild(element);
   };
 
   var destroyCard = function () {
-    var element = mainElement.querySelector('.map__card');
+    var element = mapElement.querySelector('.map__card');
 
     if (!element) {
       return;
@@ -127,7 +127,7 @@
     element.remove();
   };
 
-  var mainElement = document.querySelector('main');
+  var mapElement = document.querySelector('.map');
   var cardTemplateElement = document.querySelector('#card').content.querySelector('.map__card');
   var cardFeatureTemplateElement = cardTemplateElement.querySelector('.popup__feature');
   var cardPhotoTemplateElement = cardTemplateElement.querySelector('.popup__photo');

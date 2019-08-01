@@ -100,7 +100,6 @@
 
   var onResetElementClick = function (evt) {
     evt.preventDefault();
-
     formElement.reset();
 
     if (typeof resetCallback === 'function') {

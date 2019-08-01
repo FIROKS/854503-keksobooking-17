@@ -46,7 +46,7 @@ var onUploadSuccess = function () {
 };
 
 var onUploadError = function () {
-  window.messages.createSuccessMessage();
+  window.messages.createErrorMessage();
 };
 
 window.mainPin.setClickCallback(function () {

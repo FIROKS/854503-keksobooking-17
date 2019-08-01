@@ -15,8 +15,8 @@
     mainBlockElement.appendChild(errorMessageElement);
   };
 
-  var createErrorMessage = function () {
-    renderErrorElement();
+  var createErrorMessage = function (text) {
+    renderErrorElement(text);
   };
 
   var renderSuccessMessage = function () {
@@ -37,7 +37,7 @@
       evtKeyPressed.preventDefault();
 
       if (evtKeyPressed.keyCode === ESC_KEYCODE) {
-        deleteMessage(element);
+        element.remove();
 
         document.removeEventListener('keydown', createOnEscPressHandler(element));
       }
@@ -48,13 +48,9 @@
     return function (evtClick) {
       evtClick.preventDefault();
 
-      deleteMessage(element);
+      element.remove();
       document.removeEventListener('click', createOnClickHandler(element));
     };
-  };
-
-  var deleteMessage = function (element) {
-    element.remove();
   };
 
   var onCloseElementClick = function () {
@@ -67,7 +63,7 @@
     document.removeEventListener('keydown', createOnEscPressHandler(errorMessageElement));
     document.removeEventListener('click', createOnClickHandler(errorMessageElement));
 
-    deleteMessage(errorMessageElement);
+    errorMessageElement.remove();
   };
 
   var mainBlockElement = document.querySelector('main');

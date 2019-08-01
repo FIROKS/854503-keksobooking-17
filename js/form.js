@@ -41,6 +41,7 @@
     formResetElement.removeEventListener('click', onResetElementClick);
 
     validateCapacity();
+    setDefaultPlaceholder();
   };
 
   var disableElement = function (element) {
@@ -63,11 +64,19 @@
     });
   };
 
-  var onFieldTypeElementChange = function () {
+  var setPricePlaceholder = function () {
     var price = TypeToPriceMap[fieldTypeElement.value];
 
     fieldPriceElement.min = price;
     fieldPriceElement.placeholder = price;
+  };
+
+  var setDefaultPlaceholder = function () {
+    setPricePlaceholder();
+  };
+
+  var onFieldTypeElementChange = function () {
+    setPricePlaceholder();
   };
 
   var onFieldTimeInElementChange = function () {

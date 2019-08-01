@@ -63,6 +63,7 @@
       }
     });
   };
+  // sdf
 
   var setPricePlaceholder = function () {
     var price = TypeToPriceMap[fieldTypeElement.value];

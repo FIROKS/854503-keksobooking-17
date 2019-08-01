@@ -9,6 +9,8 @@
     palace: 'Дворец'
   };
 
+  var ESC_KEY_CODE = 27;
+
   var OFFER_PRICE = '{offer.price} ₽/ночь.';
   var OFFER_CAPACITY = '{offer.rooms} комнаты для {offer.guests} гостей.';
   var OFFER_TIME = 'Заезд после {offer.checkin}, выезд до {offer.checkout}.';
@@ -97,7 +99,7 @@
   var onEscPressed = function (evtKeyPressed) {
     evtKeyPressed.preventDefault();
 
-    if (evtKeyPressed.keyCode === 27) {
+    if (evtKeyPressed.keyCode === ESC_KEY_CODE) {
       destroyCard();
     }
   };
@@ -106,10 +108,8 @@
     var element = createCardElement(pin);
     var closeElement = element.querySelector('.popup__close');
 
-
     closeElement.addEventListener('click', onCloseElementClick);
     document.addEventListener('keydown', onEscPressed);
-
 
     mapElement.appendChild(element);
   };
@@ -120,6 +120,7 @@
     if (!element) {
       return;
     }
+
     var closeElement = element.querySelector('.popup__close');
     closeElement.removeEventListener('click', onCloseElementClick);
     document.removeEventListener('keydown', onEscPressed);

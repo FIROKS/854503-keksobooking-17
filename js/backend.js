@@ -4,12 +4,9 @@
   var URL_LOAD = 'https://js.dump.academy/keksobooking/data';
   var URL_UPLOAD = 'https://js.dump.academy/keksobooking';
   var STATUS_CODE_OK = 200;
-
   var TIMEOUT = 10000;
-
-  var TIMEOUT_ERROR_TEXT = 'Запрос не успел выполниться за {TIMEOUT}мс.';
-  var ERROR_TEXT = 'Запрос не выполнен. {status}: {text}.';
-
+  var ERROR_TIMEOUT_TEXT = 'Запрос не успел выполниться за {TIMEOUT}мс.';
+  var ERROR_REQUEST_TEXT = 'Запрос не выполнен. {status}: {text}.';
 
   var createServerRequest = function (method, url, onSuccess, onError, data) {
     var xhr = new XMLHttpRequest();
@@ -20,21 +17,26 @@
       if (xhr.status === STATUS_CODE_OK) {
         onSuccess(xhr.response);
       } else {
-
-        onError(ERROR_TEXT.replace('{status}', xhr.status).replace('{text}', xhr.statusText));
+        onError(
+            ERROR_REQUEST_TEXT
+            .replace('{status}', xhr.status)
+            .replace('{text}', xhr.statusText)
+        );
       }
     });
 
     xhr.addEventListener('error', function () {
-
-      onError(ERROR_TEXT.replace('{status}', xhr.status).replace('{text}', xhr.statusText));
-
+      onError(
+          ERROR_REQUEST_TEXT
+          .replace('{status}', xhr.status)
+          .replace('{text}', xhr.statusText)
+      );
     });
 
     xhr.addEventListener('timeout', function () {
-
-      onError(TIMEOUT_ERROR_TEXT.replace('{TIMEOUT}', TIMEOUT));
-
+      onError(
+          ERROR_TIMEOUT_TEXT.replace('{TIMEOUT}', TIMEOUT)
+      );
     });
 
     xhr.timeout = TIMEOUT;
@@ -55,5 +57,4 @@
     load: load,
     upload: upload
   };
-
 })();

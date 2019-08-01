@@ -9,7 +9,7 @@ var deactivateApplication = function () {
   window.filters.deactivate();
   window.pins.destroy();
   window.card.destroy();
-  window.mainPin.deactivate(
+  window.mainPin.setCoordinates(
       defaultMainPinCoordinates.x,
       defaultMainPinCoordinates.y
   );
@@ -19,9 +19,7 @@ var deactivateApplication = function () {
   );
 };
 
-var onLoadSuccess = function (loadedPins) {
-  cachedPins = loadedPins;
-
+var activatePage = function () {
   window.map.activate();
   window.form.activate();
   window.filters.activate();
@@ -36,21 +34,18 @@ window.filters.setChangeCallback(function () {
   window.pins.render(window.filters.filterPins(cachedPins));
 });
 
-var onLoadError = function () {
-  window.messages.createErrorMessage();
-};
-
-var onUploadSuccess = function () {
-  deactivateApplication();
-  window.messages.createSuccessMessage();
-};
-
-var onUploadError = function () {
-  window.messages.createErrorMessage();
-};
-
 window.mainPin.setClickCallback(function () {
-  window.backend.load(onLoadSuccess, onLoadError);
+  if (cachedPins) {
+    activatePage();
+  } else {
+    window.backend.load(
+        function (loadedPins) {
+          cachedPins = loadedPins;
+          activatePage();
+        },
+        window.messages.createErrorMessage
+    );
+  }
 });
 
 window.mainPin.setMoveCallback(function (x, y) {
@@ -58,7 +53,14 @@ window.mainPin.setMoveCallback(function (x, y) {
 });
 
 window.form.setSubmitCallback(function (data) {
-  window.backend.upload(onUploadSuccess, onUploadError, data);
+  window.backend.upload(
+      function () {
+        window.messages.createSuccessMessage();
+        deactivateApplication();
+      },
+      window.messages.createErrorMessage,
+      data
+  );
 });
 
 window.form.setResetCallback(function () {
@@ -69,10 +71,5 @@ window.pins.setPinClickCallback(function (pin) {
   window.card.destroy();
   window.card.create(pin);
 });
-
-window.form.setFieldAdress(
-    defaultMainPinCoordinates.x,
-    defaultMainPinCoordinates.y
-);
 
 deactivateApplication();

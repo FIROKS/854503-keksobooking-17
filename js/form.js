@@ -39,7 +39,7 @@
     fieldTimeOutElement.removeEventListener('change', onFieldTimeOutElementChange);
     fieldRoomNumberElement.removeEventListener('change', onFieldRoomNumberElementChange);
     formResetElement.removeEventListener('click', onResetElementClick);
-
+    formElement.reset();
     validateCapacity();
     setDefaultPlaceholder();
     setCapacityValue();

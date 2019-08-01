@@ -1,9 +1,8 @@
 'use strict';
 
 (function () {
-
-  var X_LIMIT_MIN = -31; // 0
-  var X_LIMIT_MAX = 1169; // 1200
+  var X_LIMIT_MIN = 0;
+  var X_LIMIT_MAX = 1200;
   var Y_LIMIT_MIN = 130;
   var Y_LIMIT_MAX = 630;
 
@@ -14,7 +13,6 @@
     if (typeof clickCallback === 'function') {
       clickCallback();
     }
-    mapMainPinElement.removeEventListener('click', onMapMainPinElementClick);
   };
 
   var onMapMainPinElementMouseDown = function (evtMouseDown) {
@@ -41,7 +39,7 @@
       var y = parseInt(mapMainPinElement.style.top, 10) - shift.y;
       var x = parseInt(mapMainPinElement.style.left, 10) - shift.x;
 
-      x = Math.max(X_LIMIT_MIN, Math.min(X_LIMIT_MAX, x));
+      x = Math.max(X_LIMIT_MIN - MAIN_PIN_HALF_WIDTH, Math.min(X_LIMIT_MAX - MAIN_PIN_HALF_WIDTH, x));
       y = Math.max(Y_LIMIT_MIN, Math.min(Y_LIMIT_MAX, y));
 
       mapMainPinElement.style.top = y + 'px';
@@ -61,11 +59,6 @@
 
     document.addEventListener('mousemove', onDocumentMouseMove);
     document.addEventListener('mouseup', onDocumentMouseUp);
-  };
-
-  var setDefaultPosition = function (x, y) {
-    mapMainPinElement.style.top = y + 'px';
-    mapMainPinElement.style.left = x + 'px';
   };
 
   var clickCallback;
@@ -89,6 +82,9 @@
         y: parseInt(mapMainPinElement.style.top, 10)
       };
     },
-    deactivate: setDefaultPosition
+    setCoordinates: function (x, y) {
+      mapMainPinElement.style.top = y + 'px';
+      mapMainPinElement.style.left = x + 'px';
+    }
   };
 })();

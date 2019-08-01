@@ -1,10 +1,8 @@
 'use strict';
 
 (function () {
-
   var PINS_LIMIT = 5;
-
-  var DELAY = 1000;
+  var DEBOUNCE_CHANGE_TIMEOUT = 500;
 
   var PRICE_VALUE_MIN = 10000;
   var PRICE_VALUE_MAX = 50000;
@@ -12,7 +10,6 @@
   var PRICE_TYPE_LOW = 'low';
   var PRICE_TYPE_MIDDLE = 'middle';
   var PRICE_TYPE_HIGH = 'high';
-
   var FILTER_DISABLED = 'any';
 
   var disableElement = function (element) {
@@ -22,30 +19,6 @@
   var activateElement = function (element) {
     element.removeAttribute('disabled');
   };
-
-  var lastTimeout;
-  var mapElement = document.querySelector('.map');
-  var filtersElement = mapElement.querySelector('.map__filters');
-  var filterFormElements = filtersElement.querySelectorAll('.map__filter');
-  var filterFieldsetElements = filtersElement.querySelectorAll('fieldset');
-  var fieldTypeElement = filtersElement.querySelector('#housing-type');
-  var fieldPriceElement = filtersElement.querySelector('#housing-price');
-  var fieldRoomsElement = filtersElement.querySelector('#housing-rooms');
-  var fieldGuestsElement = filtersElement.querySelector('#housing-guests');
-
-  var filterFeatureFieldsetElement = filtersElement.querySelector('.map__features');
-  var filterFeatureElements = filterFeatureFieldsetElement.querySelectorAll('.map__checkbox');
-
-  filtersElement.addEventListener('change', function () {
-    if (typeof changeCallback === 'function') {
-      if (lastTimeout) {
-        window.clearTimeout(lastTimeout);
-      }
-      lastTimeout = window.setTimeout(function () {
-        changeCallback();
-      }, DELAY);
-    }
-  });
 
   var getSelectedFeatures = function () {
     var selectedFeatures = [];
@@ -57,15 +30,13 @@
     return selectedFeatures;
   };
 
-  var changeCallback;
-
   var filterByFeatures = function (pin) {
     var selectedFeatures = getSelectedFeatures();
+
     return selectedFeatures.every(function (feature) {
       return pin.offer.features.includes(feature);
     });
   };
-
 
   var filterByType = function (pin) {
     return (
@@ -99,6 +70,31 @@
       (type === PRICE_TYPE_MIDDLE && (value >= PRICE_VALUE_MIN || value <= PRICE_VALUE_MAX))
     );
   };
+
+  var changeCallback;
+  var lastTimeout;
+  var mapElement = document.querySelector('.map');
+  var filtersElement = mapElement.querySelector('.map__filters');
+  var filterFormElements = filtersElement.querySelectorAll('.map__filter');
+  var filterFieldsetElements = filtersElement.querySelectorAll('fieldset');
+  var fieldTypeElement = filtersElement.querySelector('#housing-type');
+  var fieldPriceElement = filtersElement.querySelector('#housing-price');
+  var fieldRoomsElement = filtersElement.querySelector('#housing-rooms');
+  var fieldGuestsElement = filtersElement.querySelector('#housing-guests');
+
+  var filterFeatureFieldsetElement = filtersElement.querySelector('.map__features');
+  var filterFeatureElements = filterFeatureFieldsetElement.querySelectorAll('.map__checkbox');
+
+  filtersElement.addEventListener('change', function () {
+    if (lastTimeout) {
+      window.clearTimeout(lastTimeout);
+    }
+    lastTimeout = window.setTimeout(function () {
+      if (typeof changeCallback === 'function') {
+        changeCallback();
+      }
+    }, DEBOUNCE_CHANGE_TIMEOUT);
+  });
 
   window.filters = {
     activate: function () {

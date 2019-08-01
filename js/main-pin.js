@@ -2,10 +2,13 @@
 
 (function () {
 
-  var X_LIMIT_MIN = 0;
-  var X_LIMIT_MAX = 1200;
+  var X_LIMIT_MIN = -31; // 0
+  var X_LIMIT_MAX = 1169; // 1200
   var Y_LIMIT_MIN = 130;
   var Y_LIMIT_MAX = 630;
+
+  var MAIN_PIN_HALF_WIDTH = 31;
+  var MAIN_PIN_HEIGHT = 82;
 
   var onMapMainPinElementClick = function () {
     if (typeof clickCallback === 'function') {
@@ -45,7 +48,7 @@
       mapMainPinElement.style.left = x + 'px';
 
       if (typeof moveCallback === 'function') {
-        moveCallback(x, y);
+        moveCallback(x + MAIN_PIN_HALF_WIDTH, y + MAIN_PIN_HEIGHT);
       }
     };
 

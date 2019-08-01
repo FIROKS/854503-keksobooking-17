@@ -4,6 +4,8 @@
 
   var PINS_LIMIT = 5;
 
+  var DELAY = 1000;
+
   var PRICE_VALUE_MIN = 10000;
   var PRICE_VALUE_MAX = 50000;
 
@@ -21,6 +23,7 @@
     element.removeAttribute('disabled');
   };
 
+  var lastTimeout;
   var mapElement = document.querySelector('.map');
   var filtersElement = mapElement.querySelector('.map__filters');
   var filterFormElements = filtersElement.querySelectorAll('.map__filter');
@@ -35,7 +38,12 @@
 
   filtersElement.addEventListener('change', function () {
     if (typeof changeCallback === 'function') {
-      changeCallback();
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      }
+      lastTimeout = window.setTimeout(function () {
+        changeCallback();
+      }, DELAY);
     }
   });
 

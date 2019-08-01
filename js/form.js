@@ -108,6 +108,7 @@
 
   var onResetElementClick = function (evt) {
     evt.preventDefault();
+
     formElement.reset();
 
     if (typeof resetCallback === 'function') {
@@ -142,9 +143,6 @@
     },
     setSubmitCallback: function (callback) {
       submitCallback = callback;
-    },
-    resetSubmitCallback: function (callback) {
-      resetCallback = callback;
     },
     setResetCallback: function (callback) {
       resetCallback = callback;

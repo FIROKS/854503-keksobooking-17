@@ -42,6 +42,7 @@
 
     validateCapacity();
     setDefaultPlaceholder();
+    setCapacityValue();
   };
 
   var disableElement = function (element) {
@@ -62,6 +63,12 @@
         disableElement(option);
       }
     });
+  };
+
+  var setCapacityValue = function () {
+    var notDisabledOption = fieldCapacityElement.querySelector('option:not([disabled])');
+
+    fieldCapacityElement.value = notDisabledOption.value;
   };
 
   var setPricePlaceholder = function () {
@@ -96,6 +103,7 @@
 
   var onFieldRoomNumberElementChange = function () {
     validateCapacity();
+    setCapacityValue();
   };
 
   var onResetElementClick = function (evt) {

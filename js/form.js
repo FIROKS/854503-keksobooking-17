@@ -18,6 +18,7 @@
   };
 
   var activateForm = function () {
+
     formElement.classList.remove('ad-form--disabled');
     formFieldsetElements.forEach(activateElement);
 

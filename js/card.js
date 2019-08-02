@@ -3,10 +3,10 @@
 (function () {
 
   var TypeToText = {
-    flat: 'Квартира',
-    bungalo: 'Бунгало',
-    house: 'Дом',
-    palace: 'Дворец'
+    FLAT: 'Квартира',
+    BUNGALO: 'Бунгало',
+    HOUSE: 'Дом',
+    PALACE: 'Дворец'
   };
 
   var ESC_KEY_CODE = 27;
@@ -32,7 +32,7 @@
     cardAddressElement.textContent = pinData.offer.address;
     cardAvatarElement.src = pinData.author.avatar;
     cardTitleElement.textContent = pinData.offer.title;
-    cardTypeElement.textContent = TypeToText[pinData.offer.type];
+    cardTypeElement.textContent = TypeToText[pinData.offer.type.toUpperCase()];
     cardDescriptionElement.textContent = pinData.offer.description;
 
     cardPriceElement.textContent = OFFER_PRICE

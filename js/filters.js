@@ -67,7 +67,7 @@
       (type === FILTER_DISABLED) ||
       (type === PRICE_TYPE_LOW && value < PRICE_VALUE_MEDIUM_MIN) ||
       (type === PRICE_TYPE_HIGH && value > PRICE_VALUE_HIGH_MIN) ||
-      (type === PRICE_TYPE_MIDDLE && (value >= PRICE_VALUE_MEDIUM_MIN || value <= PRICE_VALUE_HIGH_MIN))
+      (type === PRICE_TYPE_MIDDLE && (value >= PRICE_VALUE_MEDIUM_MIN && value <= PRICE_VALUE_HIGH_MIN))
     );
   };
 

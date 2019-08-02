@@ -7,7 +7,6 @@
   var Y_LIMIT_MAX = 630;
 
   var MAIN_PIN_HALF_WIDTH = 31;
-  var MAIN_PIN_HEIGHT = 82;
 
   var onMapMainPinElementClick = function () {
     if (typeof clickCallback === 'function') {
@@ -46,7 +45,7 @@
       mapMainPinElement.style.left = x + 'px';
 
       if (typeof moveCallback === 'function') {
-        moveCallback(x + MAIN_PIN_HALF_WIDTH, y + MAIN_PIN_HEIGHT);
+        moveCallback(x + MAIN_PIN_HALF_WIDTH, y);
       }
     };
 

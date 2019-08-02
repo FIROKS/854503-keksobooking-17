@@ -16,7 +16,7 @@
 
     closeElement.addEventListener('click', onCloseElementClick);
 
-    createHandlers();
+    createDocumentHanlder();
 
     mainBlockElement.appendChild(errorMessageElement);
   };
@@ -27,17 +27,17 @@
     onDucumentKeyPressed = createOnEscPressHandler(successMessageElement);
     onDocumentClick = createOnClickHandler(successMessageElement);
 
-    createHandlers();
+    createDocumentHanlder();
 
     mainBlockElement.appendChild(successMessageElement);
   };
 
-  var removeHandlers = function () {
+  var removeDocumentHandlers = function () {
     document.removeEventListener('keydown', onDucumentKeyPressed);
     document.removeEventListener('click', onDocumentClick);
   };
 
-  var createHandlers = function () {
+  var createDocumentHanlder = function () {
     document.addEventListener('keydown', onDucumentKeyPressed);
     document.addEventListener('click', onDocumentClick);
   };
@@ -49,7 +49,7 @@
       if (evtKeyPressed.keyCode === ESC_KEYCODE) {
         element.remove();
 
-        removeHandlers();
+        removeDocumentHandlers();
       }
     };
   };
@@ -59,7 +59,7 @@
       evtClick.preventDefault();
 
       element.remove();
-      removeHandlers();
+      removeDocumentHandlers();
     };
   };
 
@@ -70,7 +70,7 @@
       return;
     }
     evtClick.preventDefault();
-    removeHandlers();
+    removeDocumentHandlers();
 
     errorMessageElement.remove();
   };

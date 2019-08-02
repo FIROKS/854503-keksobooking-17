@@ -67,7 +67,7 @@
   };
 
   var setCapacityValue = function () {
-    var notDisabledOption = fieldCapacityElement.querySelector('option:not([disabled])');
+    var notDisabledElement = fieldCapacityElement.querySelector('option:not([disabled])');
     if (notDisabledOption) {
       fieldCapacityElement.value = notDisabledOption.value;
     }

@@ -1,22 +1,21 @@
 'use strict';
 
 (function () {
-
   var ESC_KEYCODE = 27;
 
-  var onDucumentKeyPressed;
+  var onDocumentKeyPressed;
   var onDocumentClick;
 
   var renderErrorElement = function () {
     var errorMessageElement = errorTemplateElement.cloneNode(true);
     var closeElement = errorMessageElement.querySelector('.error__button');
 
-    onDucumentKeyPressed = createOnEscPressHandler(errorMessageElement);
+    onDocumentKeyPressed = createOnEscPressHandler(errorMessageElement);
     onDocumentClick = createOnClickHandler(errorMessageElement);
 
     closeElement.addEventListener('click', onCloseElementClick);
 
-    createDocumentHanlder();
+    createDocumentHandlers();
 
     mainBlockElement.appendChild(errorMessageElement);
   };
@@ -24,29 +23,29 @@
   var renderSuccessMessage = function () {
     var successMessageElement = successTemplateElement.cloneNode(true);
 
-    onDucumentKeyPressed = createOnEscPressHandler(successMessageElement);
+    onDocumentKeyPressed = createOnEscPressHandler(successMessageElement);
     onDocumentClick = createOnClickHandler(successMessageElement);
 
-    createDocumentHanlder();
+    createDocumentHandlers();
 
     mainBlockElement.appendChild(successMessageElement);
   };
 
   var removeDocumentHandlers = function () {
-    document.removeEventListener('keydown', onDucumentKeyPressed);
+    document.removeEventListener('keydown', onDocumentKeyPressed);
     document.removeEventListener('click', onDocumentClick);
   };
 
-  var createDocumentHanlder = function () {
-    document.addEventListener('keydown', onDucumentKeyPressed);
+  var createDocumentHandlers = function () {
+    document.addEventListener('keydown', onDocumentKeyPressed);
     document.addEventListener('click', onDocumentClick);
   };
 
   var createOnEscPressHandler = function (element) {
-    return function (evtKeyPressed) {
-      evtKeyPressed.preventDefault();
+    return function (evt) {
+      evt.preventDefault();
 
-      if (evtKeyPressed.keyCode === ESC_KEYCODE) {
+      if (evt.keyCode === ESC_KEYCODE) {
         element.remove();
 
         removeDocumentHandlers();
@@ -55,21 +54,21 @@
   };
 
   var createOnClickHandler = function (element) {
-    return function (evtClick) {
-      evtClick.preventDefault();
+    return function (evt) {
+      evt.preventDefault();
 
       element.remove();
       removeDocumentHandlers();
     };
   };
 
-  var onCloseElementClick = function (evtClick) {
+  var onCloseElementClick = function (evt) {
     var errorMessageElement = mainBlockElement.querySelector('.error');
 
     if (!errorMessageElement) {
       return;
     }
-    evtClick.preventDefault();
+    evt.preventDefault();
     removeDocumentHandlers();
 
     errorMessageElement.remove();

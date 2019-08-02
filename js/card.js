@@ -90,16 +90,16 @@
     return fragment;
   };
 
-  var onCloseElementClick = function (evtClick) {
-    evtClick.preventDefault();
+  var onCloseElementClick = function (evt) {
+    evt.preventDefault();
 
     destroyCard();
   };
 
-  var onEscPressed = function (evtKeyPressed) {
-    evtKeyPressed.preventDefault();
+  var onEscPressed = function (evt) {
+    evt.preventDefault();
 
-    if (evtKeyPressed.keyCode === ESC_KEY_CODE) {
+    if (evt.keyCode === ESC_KEY_CODE) {
       destroyCard();
     }
   };

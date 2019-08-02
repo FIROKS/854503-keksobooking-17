@@ -29,11 +29,11 @@
       fragment.appendChild(element);
     });
 
-    mapPinsElements.appendChild(fragment);
+    mapPinsElement.appendChild(fragment);
   };
 
   var destroyPins = function () {
-    mapPinsElements
+    mapPinsElement
       .querySelectorAll('.map__pin:not(.map__pin--main)')
       .forEach(function (element) {
         element.remove();
@@ -42,7 +42,7 @@
 
   var clickCallback;
   var mapElement = document.querySelector('.map');
-  var mapPinsElements = mapElement.querySelector('.map__pins');
+  var mapPinsElement = mapElement.querySelector('.map__pins');
   var mapPinTemplateElement = document.querySelector('#pin').content.querySelector('.map__pin');
 
   window.pins = {

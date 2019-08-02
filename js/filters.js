@@ -102,6 +102,7 @@
       filterFieldsetElements.forEach(activateElement);
     },
     deactivate: function () {
+      filtersElement.reset();
       filterFormElements.forEach(disableElement);
       filterFieldsetElements.forEach(disableElement);
     },

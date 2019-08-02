@@ -18,6 +18,7 @@
   };
 
   var activateForm = function () {
+
     formElement.classList.remove('ad-form--disabled');
     formFieldsetElements.forEach(activateElement);
 
@@ -39,8 +40,10 @@
     fieldTimeOutElement.removeEventListener('change', onFieldTimeOutElementChange);
     fieldRoomNumberElement.removeEventListener('change', onFieldRoomNumberElementChange);
     formResetElement.removeEventListener('click', onResetElementClick);
-
+    formElement.reset();
     validateCapacity();
+    setDefaultPlaceholder();
+    setCapacityValue();
   };
 
   var disableElement = function (element) {
@@ -63,11 +66,26 @@
     });
   };
 
-  var onFieldTypeElementChange = function () {
+  var setCapacityValue = function () {
+    var notDisabledElement = fieldCapacityElement.querySelector('option:not([disabled])');
+    if (notDisabledElement) {
+      fieldCapacityElement.value = notDisabledElement.value;
+    }
+  };
+
+  var setPricePlaceholder = function () {
     var price = TypeToPriceMap[fieldTypeElement.value];
 
     fieldPriceElement.min = price;
     fieldPriceElement.placeholder = price;
+  };
+
+  var setDefaultPlaceholder = function () {
+    setPricePlaceholder();
+  };
+
+  var onFieldTypeElementChange = function () {
+    setPricePlaceholder();
   };
 
   var onFieldTimeInElementChange = function () {
@@ -87,6 +105,7 @@
 
   var onFieldRoomNumberElementChange = function () {
     validateCapacity();
+    setCapacityValue();
   };
 
   var onResetElementClick = function (evt) {
@@ -126,9 +145,6 @@
     },
     setSubmitCallback: function (callback) {
       submitCallback = callback;
-    },
-    resetSubmitCallback: function (callback) {
-      resetCallback = callback;
     },
     setResetCallback: function (callback) {
       resetCallback = callback;

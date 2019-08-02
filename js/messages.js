@@ -1,73 +1,77 @@
 'use strict';
 
 (function () {
-
   var ESC_KEYCODE = 27;
+
+  var onDocumentKeyPressed;
+  var onDocumentClick;
 
   var renderErrorElement = function () {
     var errorMessageElement = errorTemplateElement.cloneNode(true);
     var closeElement = errorMessageElement.querySelector('.error__button');
 
+    onDocumentKeyPressed = createOnEscPressHandler(errorMessageElement);
+    onDocumentClick = createOnClickHandler(errorMessageElement);
+
     closeElement.addEventListener('click', onCloseElementClick);
-    document.addEventListener('keydown', createOnEscPressHandler(errorMessageElement));
-    document.addEventListener('click', createOnClickHandler(errorMessageElement));
+
+    createDocumentHandlers();
 
     mainBlockElement.appendChild(errorMessageElement);
-  };
-
-  var createErrorMessage = function () {
-    renderErrorElement();
   };
 
   var renderSuccessMessage = function () {
     var successMessageElement = successTemplateElement.cloneNode(true);
 
-    document.addEventListener('keydown', createOnEscPressHandler(successMessageElement));
-    document.addEventListener('click', createOnClickHandler(successMessageElement));
+    onDocumentKeyPressed = createOnEscPressHandler(successMessageElement);
+    onDocumentClick = createOnClickHandler(successMessageElement);
+
+    createDocumentHandlers();
 
     mainBlockElement.appendChild(successMessageElement);
   };
 
-  var createSuccessMessage = function () {
-    renderSuccessMessage();
+  var removeDocumentHandlers = function () {
+    document.removeEventListener('keydown', onDocumentKeyPressed);
+    document.removeEventListener('click', onDocumentClick);
+  };
+
+  var createDocumentHandlers = function () {
+    document.addEventListener('keydown', onDocumentKeyPressed);
+    document.addEventListener('click', onDocumentClick);
   };
 
   var createOnEscPressHandler = function (element) {
-    return function (evtKeyPressed) {
-      evtKeyPressed.preventDefault();
+    return function (evt) {
+      evt.preventDefault();
 
-      if (evtKeyPressed.keyCode === ESC_KEYCODE) {
-        deleteMessage(element);
+      if (evt.keyCode === ESC_KEYCODE) {
+        element.remove();
 
-        document.removeEventListener('keydown', createOnEscPressHandler(element));
+        removeDocumentHandlers();
       }
     };
   };
 
   var createOnClickHandler = function (element) {
-    return function (evtClick) {
-      evtClick.preventDefault();
+    return function (evt) {
+      evt.preventDefault();
 
-      deleteMessage(element);
-      document.removeEventListener('click', createOnClickHandler(element));
+      element.remove();
+      removeDocumentHandlers();
     };
   };
 
-  var deleteMessage = function (element) {
-    element.remove();
-  };
-
-  var onCloseElementClick = function () {
+  var onCloseElementClick = function (evt) {
     var errorMessageElement = mainBlockElement.querySelector('.error');
 
     if (!errorMessageElement) {
       return;
     }
+    evt.preventDefault();
+    removeDocumentHandlers();
 
-    document.removeEventListener('keydown', createOnEscPressHandler(errorMessageElement));
-    document.removeEventListener('click', createOnClickHandler(errorMessageElement));
-
-    deleteMessage(errorMessageElement);
+    errorMessageElement.remove();
   };
 
   var mainBlockElement = document.querySelector('main');
@@ -76,8 +80,7 @@
   var successTemplateElement = document.querySelector('#success').content.querySelector('.success');
 
   window.messages = {
-    createErrorMessage: createErrorMessage,
-    createSuccessMessage: createSuccessMessage
+    createErrorMessage: renderErrorElement,
+    createSuccessMessage: renderSuccessMessage
   };
-
 })();

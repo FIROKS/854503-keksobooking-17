@@ -15,10 +15,6 @@
     mainBlockElement.appendChild(errorMessageElement);
   };
 
-  var createErrorMessage = function (text) {
-    renderErrorElement(text);
-  };
-
   var renderSuccessMessage = function () {
     var successMessageElement = successTemplateElement.cloneNode(true);
 
@@ -26,10 +22,6 @@
     document.addEventListener('click', createOnClickHandler(successMessageElement));
 
     mainBlockElement.appendChild(successMessageElement);
-  };
-
-  var createSuccessMessage = function () {
-    renderSuccessMessage();
   };
 
   var createOnEscPressHandler = function (element) {
@@ -72,8 +64,12 @@
   var successTemplateElement = document.querySelector('#success').content.querySelector('.success');
 
   window.messages = {
-    createErrorMessage: createErrorMessage,
-    createSuccessMessage: createSuccessMessage
+    createErrorMessage: function (text) {
+      renderErrorElement(text);
+    },
+    createSuccessMessage: function () {
+      renderSuccessMessage();
+    }
   };
 
 })();

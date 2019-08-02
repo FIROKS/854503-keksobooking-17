@@ -4,8 +4,8 @@
   var PINS_LIMIT = 5;
   var DEBOUNCE_CHANGE_TIMEOUT = 500;
 
-  var PRICE_VALUE_MIN = 10000;
-  var PRICE_VALUE_MAX = 50000;
+  var PRICE_VALUE_MEDIUM_MIN = 10000;
+  var PRICE_VALUE_HIGH_MIN = 50000;
 
   var PRICE_TYPE_LOW = 'low';
   var PRICE_TYPE_MIDDLE = 'middle';
@@ -65,9 +65,9 @@
 
     return (
       (type === FILTER_DISABLED) ||
-      (type === PRICE_TYPE_LOW && value < PRICE_VALUE_MIN) ||
-      (type === PRICE_TYPE_HIGH && value > PRICE_VALUE_MAX) ||
-      (type === PRICE_TYPE_MIDDLE && (value >= PRICE_VALUE_MIN || value <= PRICE_VALUE_MAX))
+      (type === PRICE_TYPE_LOW && value < PRICE_VALUE_MEDIUM_MIN) ||
+      (type === PRICE_TYPE_HIGH && value > PRICE_VALUE_HIGH_MIN) ||
+      (type === PRICE_TYPE_MIDDLE && (value >= PRICE_VALUE_MEDIUM_MIN || value <= PRICE_VALUE_HIGH_MIN))
     );
   };
 

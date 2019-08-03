@@ -3,11 +3,13 @@
 (function () {
 
   var TypeToText = {
-    flat: 'Квартира',
-    bungalo: 'Бунгало',
-    house: 'Дом',
-    palace: 'Дворец'
+    FLAT: 'Квартира',
+    BUNGALO: 'Бунгало',
+    HOUSE: 'Дом',
+    PALACE: 'Дворец'
   };
+
+  var ESC_KEY_CODE = 27;
 
   var OFFER_PRICE = '{offer.price} ₽/ночь.';
   var OFFER_CAPACITY = '{offer.rooms} комнаты для {offer.guests} гостей.';
@@ -30,7 +32,7 @@
     cardAddressElement.textContent = pinData.offer.address;
     cardAvatarElement.src = pinData.author.avatar;
     cardTitleElement.textContent = pinData.offer.title;
-    cardTypeElement.textContent = TypeToText[pinData.offer.type];
+    cardTypeElement.textContent = TypeToText[pinData.offer.type.toUpperCase()];
     cardDescriptionElement.textContent = pinData.offer.description;
 
     cardPriceElement.textContent = OFFER_PRICE
@@ -88,16 +90,16 @@
     return fragment;
   };
 
-  var onCloseElementClick = function (evtClick) {
-    evtClick.preventDefault();
+  var onCloseElementClick = function (evt) {
+    evt.preventDefault();
 
     destroyCard();
   };
 
-  var onEscPressed = function (evtKeyPressed) {
-    evtKeyPressed.preventDefault();
+  var onEscPressed = function (evt) {
+    evt.preventDefault();
 
-    if (evtKeyPressed.keyCode === 27) {
+    if (evt.keyCode === ESC_KEY_CODE) {
       destroyCard();
     }
   };
@@ -106,20 +108,19 @@
     var element = createCardElement(pin);
     var closeElement = element.querySelector('.popup__close');
 
-
     closeElement.addEventListener('click', onCloseElementClick);
     document.addEventListener('keydown', onEscPressed);
 
-
-    mainElement.appendChild(element);
+    mapElement.appendChild(element);
   };
 
   var destroyCard = function () {
-    var element = mainElement.querySelector('.map__card');
+    var element = mapElement.querySelector('.map__card');
 
     if (!element) {
       return;
     }
+
     var closeElement = element.querySelector('.popup__close');
     closeElement.removeEventListener('click', onCloseElementClick);
     document.removeEventListener('keydown', onEscPressed);
@@ -127,7 +128,7 @@
     element.remove();
   };
 
-  var mainElement = document.querySelector('main');
+  var mapElement = document.querySelector('.map');
   var cardTemplateElement = document.querySelector('#card').content.querySelector('.map__card');
   var cardFeatureTemplateElement = cardTemplateElement.querySelector('.popup__feature');
   var cardPhotoTemplateElement = cardTemplateElement.querySelector('.popup__photo');

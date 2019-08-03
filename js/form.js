@@ -107,6 +107,7 @@
   };
 
   var renderPhoto = function (photo) {
+    photoContainerElement.remove();
     photosContainerElement.appendChild(createPhotoElement(photo));
   };
 

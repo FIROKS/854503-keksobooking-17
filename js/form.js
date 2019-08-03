@@ -3,11 +3,11 @@
 
 (function () {
 
-  var TypeToPriceMap = { // @TODO
-    palace: 10000,
-    house: 5000,
-    flat: 1000,
-    bungalo: 0
+  var TypeToPriceMap = {
+    PALACE: 10000,
+    HOUSE: 5000,
+    FLAT: 1000,
+    BUNGALO: 0
   };
 
   var RoomNumberToCapacityMap = {
@@ -83,7 +83,7 @@
   };
 
   var setPricePlaceholder = function () {
-    var price = TypeToPriceMap[fieldTypeElement.value];
+    var price = TypeToPriceMap[fieldTypeElement.value.toUpperCase()];
 
     fieldPriceElement.min = price;
     fieldPriceElement.placeholder = price;

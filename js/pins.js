@@ -21,6 +21,7 @@
       var element = createPinElement(pin);
 
       element.addEventListener('click', function () {
+        element.classList.add('map__pin--active');
         if (typeof clickCallback === 'function') {
           clickCallback(pin);
         }

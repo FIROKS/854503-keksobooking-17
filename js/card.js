@@ -2,18 +2,18 @@
 
 (function () {
 
+  var ESC_KEY_CODE = 27;
+
+  var OFFER_PRICE = '{offer.price} ₽/ночь.';
+  var OFFER_CAPACITY = '{offer.rooms} комнаты для {offer.guests} гостей.';
+  var OFFER_TIME = 'Заезд после {offer.checkin}, выезд до {offer.checkout}.';
+
   var TypeToText = {
     FLAT: 'Квартира',
     BUNGALO: 'Бунгало',
     HOUSE: 'Дом',
     PALACE: 'Дворец'
   };
-
-  var ESC_KEY_CODE = 27;
-
-  var OFFER_PRICE = '{offer.price} ₽/ночь.';
-  var OFFER_CAPACITY = '{offer.rooms} комнаты для {offer.guests} гостей.';
-  var OFFER_TIME = 'Заезд после {offer.checkin}, выезд до {offer.checkout}.';
 
   var createCardElement = function (pinData) {
     var cardElement = cardTemplateElement.cloneNode(true);

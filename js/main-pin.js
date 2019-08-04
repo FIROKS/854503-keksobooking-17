@@ -6,7 +6,7 @@
   var Y_LIMIT_MIN = 130;
   var Y_LIMIT_MAX = 630;
 
-  var MAIN_PIN_HALF_WIDTH = 31;
+  var MAIN_PIN_WIDTH = 62;
   var MAIN_PIN_HEIGHT = 82;
 
   var onMapMainPinElementClick = function () {
@@ -39,14 +39,14 @@
       var y = parseInt(mapMainPinElement.style.top, 10) - shift.y;
       var x = parseInt(mapMainPinElement.style.left, 10) - shift.x;
 
-      x = Math.max(X_LIMIT_MIN - MAIN_PIN_HALF_WIDTH, Math.min(X_LIMIT_MAX - MAIN_PIN_HALF_WIDTH, x));
-      y = Math.max(MAIN_PIN_HEIGHT, Math.min(Y_LIMIT_MAX, y));
+      x = Math.max(X_LIMIT_MIN, Math.min(X_LIMIT_MAX - MAIN_PIN_WIDTH, x));
+      y = Math.max(Y_LIMIT_MIN, Math.min(Y_LIMIT_MAX, y));
 
       mapMainPinElement.style.top = y + 'px';
       mapMainPinElement.style.left = x + 'px';
 
       if (typeof moveCallback === 'function') {
-        moveCallback(x + MAIN_PIN_HALF_WIDTH, y);
+        moveCallback(x + MAIN_PIN_WIDTH / 2, y + MAIN_PIN_HEIGHT);
       }
     };
 

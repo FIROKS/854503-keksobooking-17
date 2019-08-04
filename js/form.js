@@ -26,8 +26,8 @@
 
   var AVATAR_DEFAULT_SRC = 'img/muffin-grey.svg';
 
-  var PHOTO_WIDTH = '70px';
-  var PHOTO_HEIGH = '70px';
+  var PHOTO_WIDTH = '60px';
+  var PHOTO_HEIGH = '60px';
   var PHOTO_ALT = 'Фото объявления';
 
   var activateForm = function () {
@@ -60,10 +60,10 @@
     fieldPhotoUploadElement.removeEventListener('change', onPhotoUploadElementChange);
 
     formElement.reset();
-    resetPhotosToDefault();
+    resetPhotosContainerToDefault();
     validateCapacity();
-    setPricePlaceholder();
-    setCapacityValue();
+    syncPricePlaceholder();
+    updateCapacityValue();
 
     userAvatarElement.src = AVATAR_DEFAULT_SRC;
   };
@@ -88,14 +88,14 @@
     });
   };
 
-  var setCapacityValue = function () { // @NOTICE: naming, update/sync/..
+  var updateCapacityValue = function () {
     var notDisabledElement = fieldCapacityElement.querySelector('option:not([disabled])');
     if (notDisabledElement) {
       fieldCapacityElement.value = notDisabledElement.value;
     }
   };
 
-  var setPricePlaceholder = function () { // @NOTICE: naming
+  var syncPricePlaceholder = function () {
     var price = TypeToPriceMap[fieldTypeElement.value.toUpperCase()];
 
     fieldPriceElement.min = price;
@@ -147,7 +147,7 @@
     return false;
   };
 
-  var readFile = function (file, onLoad) { // @NOTICE: naming
+  var readFile = function (file, onLoad) {
     var reader = new FileReader();
 
     reader.addEventListener('load', function () {
@@ -158,16 +158,16 @@
     reader.readAsDataURL(file);
   };
 
-  var resetPhotosToDefault = function () {
-    var dd = photosContainerElement.querySelectorAll('.ad-form__photo');
-    dd.forEach(function (element) {
+  var resetPhotosContainerToDefault = function () {
+    var photoElements = photosContainerElement.querySelectorAll('.ad-form__photo');
+    photoElements.forEach(function (element) {
       element.remove();
     });
     photosContainerElement.appendChild(photoContainerElement);
   };
 
   var onFieldTypeElementChange = function () {
-    setPricePlaceholder();
+    syncPricePlaceholder();
   };
 
   var onFieldTimeInElementChange = function () {
@@ -187,7 +187,7 @@
 
   var onFieldRoomNumberElementChange = function () {
     validateCapacity();
-    setCapacityValue();
+    updateCapacityValue();
   };
 
   var onResetElementClick = function (evt) {

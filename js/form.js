@@ -26,9 +26,10 @@
 
   var AVATAR_DEFAULT_SRC = 'img/muffin-grey.svg';
 
-  var PHOTO_WIDTH = '60px';
-  var PHOTO_HEIGH = '60px';
+  var PHOTO_WIDTH = '70px';
+  var PHOTO_HEIGH = '70px';
   var PHOTO_ALT = 'Фото объявления';
+  var PHOTO_BORDER_RADIUS = 'inherit';
 
   var activateForm = function () {
     formElement.classList.remove('ad-form--disabled');
@@ -109,6 +110,7 @@
     imageElement.style.width = PHOTO_WIDTH;
     imageElement.style.height = PHOTO_HEIGH;
     imageElement.alt = PHOTO_ALT;
+    imageElement.style.borderRadius = PHOTO_BORDER_RADIUS;
 
     readFile(file, function (data) {
       imageElement.src = data;

@@ -21,7 +21,14 @@
       var element = createPinElement(pin);
 
       element.addEventListener('click', function () {
+
         element.classList.add('map__pin--active');
+
+        if (activePinElement) {
+          activePinElement.classList.remove('map__pin--active');
+        }
+        activePinElement = element;
+
         if (typeof clickCallback === 'function') {
           clickCallback(pin);
         }
@@ -34,6 +41,8 @@
   };
 
   var destroyPins = function () {
+
+    activePinElement = null;
     mapPinsElement
       .querySelectorAll('.map__pin:not(.map__pin--main)')
       .forEach(function (element) {
@@ -41,6 +50,7 @@
       });
   };
 
+  var activePinElement;
   var clickCallback;
   var mapElement = document.querySelector('.map');
   var mapPinsElement = mapElement.querySelector('.map__pins');

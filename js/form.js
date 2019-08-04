@@ -17,10 +17,21 @@
     '100': ['0']
   };
 
-  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+  var FILE_TYPES = [
+    'gif',
+    'jpg',
+    'jpeg',
+    'png'
+  ];
+
+  var AVATAR_DEFAULT_SRC = 'img/muffin-grey.svg';
+
+  var PHOTO_WIDTH = '70px';
+  var PHOTO_HEIGH = '70px';
+  var PHOTO_ALT = 'Фото объявления';
+  var PHOTO_BORDER_RADIUS = 'inherit';
 
   var activateForm = function () {
-
     formElement.classList.remove('ad-form--disabled');
     formFieldsetElements.forEach(activateElement);
 
@@ -31,8 +42,8 @@
     fieldRoomNumberElement.addEventListener('change', onFieldRoomNumberElementChange);
     formResetElement.addEventListener('click', onResetElementClick);
 
-    fieldAvatarUploadElement.addEventListener('change', avatarUploadElementOnChangeHandler());
-    fieldPhotoUploadElement.addEventListener('change', photoUploadElementChangeHandler());
+    fieldAvatarUploadElement.addEventListener('change', onAvatarUploadElementChange);
+    fieldPhotoUploadElement.addEventListener('change', onPhotoUploadElementChange);
   };
 
   var deactivateForm = function () {
@@ -46,13 +57,16 @@
     fieldRoomNumberElement.removeEventListener('change', onFieldRoomNumberElementChange);
     formResetElement.removeEventListener('click', onResetElementClick);
 
-    fieldAvatarUploadElement.removeEventListener('change', avatarUploadElementOnChangeHandler());
-    fieldPhotoUploadElement.removeEventListener('change', photoUploadElementChangeHandler());
+    fieldAvatarUploadElement.removeEventListener('change', onAvatarUploadElementChange);
+    fieldPhotoUploadElement.removeEventListener('change', onPhotoUploadElementChange);
 
     formElement.reset();
+    resetPhotosContainerToDefault();
     validateCapacity();
-    setDefaultPlaceholder();
-    setCapacityValue();
+    syncPricePlaceholder();
+    updateCapacityValue();
+
+    userAvatarElement.src = AVATAR_DEFAULT_SRC;
   };
 
   var disableElement = function (element) {
@@ -75,81 +89,87 @@
     });
   };
 
-  var setCapacityValue = function () {
+  var updateCapacityValue = function () {
     var notDisabledElement = fieldCapacityElement.querySelector('option:not([disabled])');
     if (notDisabledElement) {
       fieldCapacityElement.value = notDisabledElement.value;
     }
   };
 
-  var setPricePlaceholder = function () {
+  var syncPricePlaceholder = function () {
     var price = TypeToPriceMap[fieldTypeElement.value.toUpperCase()];
 
     fieldPriceElement.min = price;
     fieldPriceElement.placeholder = price;
   };
 
-  var setDefaultPlaceholder = function () {
-    setPricePlaceholder();
-  };
+  var createPhotoElement = function (file) {
+    var containerElement = photoContainerElement.cloneNode(true);
+    var imageElement = document.createElement('img');
 
-  var createPhotoElement = function (image) {
-    var newPhotoContainerElement = photoContainerElement.cloneNode(true);
-    var newPhotoElement = document.createElement('img');
-    uploadImage(image, newPhotoElement);
-    newPhotoElement.style.width = '70px';
-    newPhotoElement.style.height = '70px';
-    newPhotoElement.alt = 'Фото объявления';
+    imageElement.style.width = PHOTO_WIDTH;
+    imageElement.style.height = PHOTO_HEIGH;
+    imageElement.alt = PHOTO_ALT;
+    imageElement.style.borderRadius = PHOTO_BORDER_RADIUS;
 
-    newPhotoContainerElement.appendChild(newPhotoElement);
-
-    return newPhotoContainerElement;
-  };
-
-  var renderPhoto = function (photo) {
-    photoContainerElement.remove();
-    photosContainerElement.appendChild(createPhotoElement(photo));
-  };
-
-  var photoUploadElementChangeHandler = function () {
-    return function () {
-      var file = fieldPhotoUploadElement.files[0];
-
-      if (validateFile(file)) {
-
-        renderPhoto(file);
-      }
-    };
-  };
-
-  var avatarUploadElementOnChangeHandler = function () {
-    return function () {
-      var file = fieldAvatarUploadElement.files[0];
-
-      if (validateFile(file)) {
-        uploadImage(file, userAvatarElement);
-      }
-    };
-  };
-
-  var validateFile = function (file) {
-    var fileName = file.name.toLowerCase();
-    return FILE_TYPES.some(function (element) {
-      return fileName.endsWith(element);
+    readFile(file, function (data) {
+      imageElement.src = data;
     });
+
+    containerElement.appendChild(imageElement);
+
+    return containerElement;
   };
 
-  var uploadImage = function (image, imageElement) {
+  var onPhotoUploadElementChange = function () {
+    var file = fieldPhotoUploadElement.files[0];
+    if (isFileValid(file)) {
+      photoContainerElement.remove();
+      photosContainerElement.appendChild(createPhotoElement(file));
+    }
+  };
+
+  var onAvatarUploadElementChange = function () {
+    var file = fieldAvatarUploadElement.files[0];
+    if (isFileValid(file)) {
+      readFile(file, function (data) {
+        userAvatarElement.src = data;
+      });
+    }
+  };
+
+  var isFileValid = function (file) {
+    if (file) {
+      var fileName = file.name.toLowerCase();
+      return FILE_TYPES.some(function (element) {
+        return fileName.endsWith(element);
+      });
+    }
+
+    return false;
+  };
+
+  var readFile = function (file, onLoad) {
     var reader = new FileReader();
 
     reader.addEventListener('load', function () {
-      imageElement.src = reader.result;
+      if (typeof onLoad === 'function') {
+        onLoad(reader.result);
+      }
     });
-    reader.readAsDataURL(image);
+    reader.readAsDataURL(file);
+  };
+
+  var resetPhotosContainerToDefault = function () {
+    var photoElements = photosContainerElement.querySelectorAll('.ad-form__photo');
+    photoElements.forEach(function (element) {
+      element.remove();
+    });
+    photosContainerElement.appendChild(photoContainerElement);
   };
 
   var onFieldTypeElementChange = function () {
-    setPricePlaceholder();
+    syncPricePlaceholder();
   };
 
   var onFieldTimeInElementChange = function () {
@@ -169,7 +189,7 @@
 
   var onFieldRoomNumberElementChange = function () {
     validateCapacity();
-    setCapacityValue();
+    updateCapacityValue();
   };
 
   var onResetElementClick = function (evt) {
